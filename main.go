@@ -7,8 +7,9 @@ import (
 	th "github.com/mymmrac/telego/telegohandler"
 	tu "github.com/mymmrac/telego/telegoutil"
 	models "vab/database"
-	handlers "vab/handlers"
-	"vab/handlers/user"
+	"vab/handlers"
+	user_handlers "vab/handlers/user"
+
 	//"gorm.io/driver/mysql"
 	//"gorm.io/gorm"
 	"log"
@@ -52,11 +53,12 @@ func main() {
 
 	// START HANDLERS BLOCK ///////////////////////////////////////////////////////////////////////
 	// user_services handlers =====================================================================
-	bh.Handle(user_servises.UsHi, th.TextEqual("hi")) //Вывод приветствия
+	bh.Handle(user_handlers.CatalogMess, th.TextEqual("📁 Каталог"))   // Переход в меню Каталог
+	bh.Handle(user_handlers.MainMenuMess, th.TextEqual("🔙 В НАЧАЛО")) // Переход в меню Каталог
 	// ============================================================================================
 
 	// main_handlers ==============================================================================
-	bh.Handle(handlers.Start, th.CommandEqual("start")) //Вывод приветствия
+	bh.Handle(main_handlers.Start, th.CommandEqual("start")) //Вывод приветствия
 	//bh.Handle(handlers.SendLogo, th.TextEqual("88"))    //Вывод логотипа
 	// END HANDLERS BLOCK /////////////////////////////////////////////////////////////////////////
 

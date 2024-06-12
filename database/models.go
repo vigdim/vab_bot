@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"os"
-	"strconv"
 )
 
 var DB *gorm.DB // База данных с инициализацией в func Init()
@@ -35,30 +34,30 @@ func Init() {
 	//	PriceID:  1,
 	//})
 
-	var resultCode Code
-	DB.Where("code_num = ?", "156723").First(&resultCode)
-	var resultOfd Ofd
-	DB.Where("id = ?", resultCode.OfdID).First(&resultOfd)
-	var resultPeriod Period
-	DB.Where("id = ?", resultCode.PeriodID).First(&resultPeriod)
-	var resultPrice Price
-	DB.Where("id = ?", resultCode.PeriodID).First(&resultPrice)
-	price, _ := strconv.ParseFloat(resultPrice.Price, 32)
-
-	tgId := "1234567890"
-	DB.Create(&Buy{
-		Model:      gorm.Model{},
-		TgId:       tgId,
-		Email:      "aaa@bbb.com",
-		OfdName:    resultOfd.OfdName,
-		CodeNum:    resultCode.CodeNum,
-		PeriodName: resultPeriod.PeriodName,
-		Price:      float32(price),
-	})
+	//var resultCode Code
+	//DB.Where("code_num = ?", "156723").First(&resultCode)
+	//var resultOfd Ofd
+	//DB.Where("id = ?", resultCode.OfdID).First(&resultOfd)
+	//var resultPeriod Period
+	//DB.Where("id = ?", resultCode.PeriodID).First(&resultPeriod)
+	//var resultPrice Price
+	//DB.Where("id = ?", resultCode.PeriodID).First(&resultPrice)
+	//price, _ := strconv.ParseFloat(resultPrice.Price, 32)
+	//
+	//tgId := "1234567890"
+	//DB.Create(&Buy{
+	//	Model:      gorm.Model{},
+	//	TgId:       tgId,
+	//	Email:      "aaa@bbb.com",
+	//	OfdName:    resultOfd.OfdName,
+	//	CodeNum:    resultCode.CodeNum,
+	//	PeriodName: resultPeriod.PeriodName,
+	//	Price:      float32(price),
+	//})
 
 	//=============
 	//DB.Where("code_num = ?", "333333555555").Delete(&Code{}) // Помечено как удаленное с возможностью восстановления
-	DB.Where("code_num = ?", "333333555555").Unscoped().Delete(&Code{})
+	//DB.Where("code_num = ?", "333333555555").Unscoped().Delete(&Code{})
 }
 
 // БЛОК ОПИСАНИЯ ТАБЛИЦ ///////////////////////////////////////////////////////////////////////////
