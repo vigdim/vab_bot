@@ -7,7 +7,7 @@ import (
 	th "github.com/mymmrac/telego/telegohandler"
 	tu "github.com/mymmrac/telego/telegoutil"
 	models "vab/database"
-	"vab/handlers"
+	handlers "vab/handlers"
 	"vab/handlers/user"
 	//"gorm.io/driver/mysql"
 	//"gorm.io/gorm"
@@ -57,20 +57,12 @@ func main() {
 
 	// main_handlers ==============================================================================
 	bh.Handle(handlers.Start, th.CommandEqual("start")) //Вывод приветствия
+	//bh.Handle(handlers.SendLogo, th.TextEqual("88"))    //Вывод логотипа
 	// END HANDLERS BLOCK /////////////////////////////////////////////////////////////////////////
 
 	bh.HandleMessage(func(bot *telego.Bot, message telego.Message) {
 		fmt.Println("Start")
 	}, th.TextPrefix("st"))
-
-	//// Register new handler with match on command `/start`
-	//bh.Handle(func(bot *telego.Bot, update telego.Update) {
-	//	// Send message
-	//	_, _ = bot.SendMessage(tu.Message(
-	//		tu.ID(update.Message.Chat.ID),
-	//		fmt.Sprintf("Hello %s!", update.Message.From.FirstName /*, result.Name, SQLCON*/),
-	//	))
-	//}, th.CommandEqual("start"))
 
 	// Register new handler with match on command `/sticker`
 	bh.Handle(func(bot *telego.Bot, update telego.Update) {
@@ -81,21 +73,20 @@ func main() {
 		_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID), "Unknown command, use /start"))
 	}, th.TextSuffix("90"))
 
-	file := mustOpen("files/vab.png")
-
-	bh.Handle(func(bot *telego.Bot, update telego.Update) {
-		_, _ = bot.SendPhoto(tu.Photo(tu.ID(update.Message.Chat.ID), tu.File(file)))
-	}, th.TextSuffix("77"))
+	//file := utils.MustOpen("files/vab.png")
+	//bh.Handle(func(bot *telego.Bot, update telego.Update) {
+	//	_, _ = bot.SendPhoto(tu.Photo(tu.ID(update.Message.Chat.ID), tu.File(file)))
+	//}, th.TextSuffix("77"))
 
 	// Start handling updates
 	bh.Start()
 }
 
 // Helper function to open file or panic
-func mustOpen(filename string) *os.File {
-	file, err := os.Open(filename)
-	if err != nil {
-		panic(err)
-	}
-	return file
-}
+//func mustOpen(filename string) *os.File {
+//	file, err := os.Open(filename)
+//	if err != nil {
+//		panic(err)
+//	}
+//	return file
+//}
