@@ -15,7 +15,7 @@ var Kb_main = tu.Keyboard(
 // Kb_catalog - Меню каталога сервисов
 var Kb_catalog = tu.Keyboard(
 	tu.KeyboardRow(
-		tu.KeyboardButton("📁 Купить ОФД"),
+		tu.KeyboardButton("💵 Купить ОФД"),
 		tu.KeyboardButton("👤 Консультация"),
 	),
 	tu.KeyboardRow(
