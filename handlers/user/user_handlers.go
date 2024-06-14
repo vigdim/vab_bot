@@ -32,7 +32,7 @@ func MainMenuMess(bot *telego.Bot, update telego.Update) {
 }
 
 // PayOfd - Меню покупки ОФД
-func PayOfd(bot *telego.Bot, update telego.Update) {
+func ListOfd(bot *telego.Bot, update telego.Update) {
 
 	var ofds, len_ofds = methods.GetDbAllOfd()
 
@@ -83,7 +83,7 @@ func GetOneOfd(bot *telego.Bot, query telego.CallbackQuery) {
 	var PeriodName []models.Period
 	var Price []models.Price
 
-	for index, _ := range Code {
+	for index := range Code {
 		models.DB.First(&PeriodName, Code[index].PeriodID)
 		models.DB.First(&Price, Code[index].PriceID)
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
