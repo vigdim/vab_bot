@@ -52,11 +52,19 @@ func main() {
 	defer bot.StopLongPolling()
 
 	// START HANDLERS BLOCK ///////////////////////////////////////////////////////////////////////
-	// user_services handlers =====================================================================
-	bh.Handle(user_handlers.CatalogMess, th.TextEqual("📁 Каталог"))   // Переход в меню Каталог
-	bh.Handle(user_handlers.MainMenuMess, th.TextEqual("🔙 В НАЧАЛО")) // Переход в меню Каталог
-	bh.Handle(user_handlers.PayOfd, th.TextEqual("💵 Купить ОФД"))     // Переход в меню Купить ОФД
+	// user_services handlers message ==============================================================
+	// Переход в меню Каталог
+	bh.Handle(user_handlers.CatalogMess, th.TextEqual("📁 Каталог"))
+	// Переход в меню Каталог
+	bh.Handle(user_handlers.MainMenuMess, th.TextEqual("🔙 В НАЧАЛО"))
+	// Переход в меню Купить ОФД
+	bh.Handle(user_handlers.PayOfd, th.TextEqual("💵 Купить ОФД"))
+
+	// user_services handlers CallbackQuery =======================================================
+	// cback_ОФД
+	bh.HandleCallbackQuery(user_handlers.GetOneOfd, th.AnyCallbackQueryWithMessage(), th.CallbackDataPrefix("cb_OFD_"))
 	// ============================================================================================
+
 	// main_handlers ==============================================================================
 	bh.Handle(main_handlers.Start, th.CommandEqual("start")) //Вывод приветствия
 	//bh.Handle(handlers.SendLogo, th.TextEqual("88"))    //Вывод логотипа
