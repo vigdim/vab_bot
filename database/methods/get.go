@@ -2,7 +2,7 @@ package methods
 
 import (
 	"strings"
-	models "vab/database"
+	"vab/database"
 )
 
 // GetUser - Получаем пользователя

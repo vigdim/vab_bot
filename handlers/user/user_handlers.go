@@ -1,27 +1,33 @@
 package user_handlers
 
 import (
+	"fmt"
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
+	"os"
 	"strconv"
 	"strings"
-	models "vab/database"
+	"vab/database"
 	"vab/database/methods"
 	"vab/keyboards"
 	"vab/utils"
 )
 
-// UsHi Вывод приветствия
-//func UsHi(bot *telego.Bot, update telego.Update) {
-//	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-//		fmt.Sprintf("Привет! %s", methods.GetUser())).WithReplyMarkup(keyboards.Kb_user_Hi))
-//}
-
 // CatalogMess Меню - Каталог
 func CatalogMess(bot *telego.Bot, update telego.Update) {
 	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-		"<b>Меню - 📁Каталог</b>").WithReplyMarkup(keyboards.Kb_catalog).WithParseMode(telego.ModeHTML))
+		"<b>Меню 📁 Каталог</b>").WithReplyMarkup(keyboards.Kb_catalog).WithParseMode(telego.ModeHTML))
+}
+
+// AboutMess Меню - О компании
+func AboutMess(bot *telego.Bot, update telego.Update) {
+	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
+	file := utils.MustOpen("files/vab.png")
+	_, _ = bot.SendPhoto(tu.Photo(tu.ID(update.Message.Chat.ID), tu.File(file)))
+	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+		utils.AboutCompany).
+		WithReplyMarkup(keyboards.Kb_catalog).WithParseMode(telego.ModeHTML))
 }
 
 // MainMenuMess - Главное меню
@@ -31,7 +37,14 @@ func MainMenuMess(bot *telego.Bot, update telego.Update) {
 		"<b>Главное 🍽 меню</b>").WithReplyMarkup(keyboards.Kb_main).WithParseMode(telego.ModeHTML))
 }
 
-// PayOfd - Меню покупки ОФД
+// CabinetMess - Меню Кабинет
+func CabinetMess(bot *telego.Bot, update telego.Update) {
+	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
+	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+		"<b>Меню 👤 Кабинет</b>").WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
+}
+
+// ListOfd - Меню покупки ОФД
 func ListOfd(bot *telego.Bot, update telego.Update) {
 
 	var ofds, len_ofds = methods.GetDbAllOfd()
@@ -39,47 +52,57 @@ func ListOfd(bot *telego.Bot, update telego.Update) {
 	var bnOfd = make([]telego.InlineKeyboardButton, len_ofds)
 	var bnDesc = make([]telego.InlineKeyboardButton, len_ofds)
 
-	row1 := tu.InlineKeyboardRow()
-	row2 := tu.InlineKeyboardRow()
-	row3 := tu.InlineKeyboardRow()
-	row4 := tu.InlineKeyboardRow()
-	row5 := tu.InlineKeyboardRow()
-	row6 := tu.InlineKeyboardRow()
+	//row1 := tu.InlineKeyboardRow()
+	//row2 := tu.InlineKeyboardRow()
+	//row3 := tu.InlineKeyboardRow()
+	//row4 := tu.InlineKeyboardRow()
+	//row5 := tu.InlineKeyboardRow()
+	//row6 := tu.InlineKeyboardRow()
+	var row [6][]telego.InlineKeyboardButton
 
 	for index, value := range ofds {
 		//fmt.Println(index, value)
 		bnOfd[index] = tu.InlineKeyboardButton(value.OfdName).WithCallbackData("cb_OFD_" + value.OfdName + "_id_" + strconv.Itoa(int(value.ID)))
 		bnDesc[index] = tu.InlineKeyboardButton("Описание").WithWebApp(tu.WebAppInfo(value.OfdLink))
-		tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton("What about C#?"),
-
-			tu.InlineKeyboardButton("LOL").WithCallbackData("LOL"),
-		)
+		//row = append(row, bnOfd[index], bnDesc[index])
+		row[index] = append(row[index], bnOfd[index], bnDesc[index])
+		ListOfd2(bot, update, row[index])
 	}
+	//ListOfd2(bot, update, row)
+	//row1 = append(row1, bnOfd[0], bnDesc[0])
+	//row2 = append(row2, bnOfd[1], bnDesc[1])
+	//row3 = append(row3, bnOfd[2], bnDesc[2])
+	//row4 = append(row4, bnOfd[3], bnDesc[3])
+	//row5 = append(row5, bnOfd[4], bnDesc[4])
+	//row6 = append(row6, bnOfd[5], bnDesc[5])
 
-	row1 = append(row1, bnOfd[0], bnDesc[0])
-	row2 = append(row2, bnOfd[1], bnDesc[1])
-	row3 = append(row3, bnOfd[2], bnDesc[2])
-	row4 = append(row4, bnOfd[3], bnDesc[3])
-	row5 = append(row5, bnOfd[4], bnDesc[4])
-	row6 = append(row6, bnOfd[5], bnDesc[5])
-
-	//type Rows struct {
-	//	row []telego.InlineKeyboardButton
-	//}
-
-	inlineKeyboard := tu.InlineKeyboard(row1, row2, row3, row4, row5, row6)
-
-	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-		"<b>Выберите оператора ОФД</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+	//inlineKeyboard := tu.InlineKeyboard(row[0])
+	//
+	//_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+	//	"<b>Выберите оператора ОФД</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 }
 
-// MainMenuMess - Главное меню
-func GetOneOfd(bot *telego.Bot, query telego.CallbackQuery) {
+func ListOfd2(bot *telego.Bot, update telego.Update, ikb []telego.InlineKeyboardButton) {
+	inlineKeyboard := tu.InlineKeyboard(ikb)
+
+	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+		"Оператор ОФД: "+ikb[0].Text).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+}
+
+// GetOneOfdCb - щелчек по кнопке оператора ОФД
+func GetOneOfdCb(bot *telego.Bot, query telego.CallbackQuery) {
+	inlineKeyboard := tu.InlineKeyboard(
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton("💵 Оплатить код активации 💵").WithCallbackData("callback_payofd"),
+		),
+	)
 	var Code, ofd_name = methods.GetDbOneOfd(query.Data)
-
+	if len(Code) == 0 {
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
+			"️❗️Коды активации для оператора "+strings.Split(query.Data, "_")[2]+
+				" ОФД временно недоступны.\nВойдите в меню 💬 <b>Консультация</b> для решения проблемы.").WithParseMode(telego.ModeHTML))
+	}
 	_ = bot.AnswerCallbackQuery(tu.CallbackQuery(query.ID).WithText(strings.Split(query.Data, "_")[2]))
-
 	var PeriodName []models.Period
 	var Price []models.Price
 
@@ -88,8 +111,150 @@ func GetOneOfd(bot *telego.Bot, query telego.CallbackQuery) {
 		models.DB.First(&Price, Code[index].PriceID)
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
 			"Код активации "+ofd_name+" ОФД\n<b>Срок: "+PeriodName[0].PeriodName+"</b>"+
-				"\n<b>Цена: "+Price[0].Price+" рублей</b>").WithParseMode(telego.ModeHTML))
+				"\n<b>Цена: "+Price[0].Price+" рублей</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 
 		//_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID), PeriodName[0].PeriodName))
 	}
+}
+
+// ConsultationMess - Меню Консультация
+func ConsultationMess(bot *telego.Bot, update telego.Update) {
+	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
+	inlineKeyboard := tu.InlineKeyboard(
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton("Приобретение ККТ").WithCallbackData("cb_cons_PayKKT"),
+		),
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton("Приобретение ФН или ОФД").WithCallbackData("cb_cons_PayFnOfd"),
+		),
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton("Обслуживание ККТ").WithCallbackData("cb_cons_ServKKT"),
+		),
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton("Бухгалтерское обслуживание").WithCallbackData("cb_cons_ServBuh"),
+		),
+	)
+
+	Phone := os.Getenv("VAB_PHONE")
+	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+		"<b>Меню 💬 Консультация</b>").WithParseMode(telego.ModeHTML))
+	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+		fmt.Sprintf(utils.Consultation,
+			Phone)).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+
+}
+
+// ConsultationCb - Обработка кнопок консультации
+func ConsultationCb(bot *telego.Bot, query telego.CallbackQuery) {
+	var q = strings.Split(query.Data, "_")[2]
+	VabTgId, _ := strconv.ParseInt(os.Getenv("VAB_TG_ID"), 10, 64)
+	inlineKeyboardPeriod := tu.InlineKeyboard(
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton("🔂 Ответить в личку").WithURL("https://t.me/"+query.From.Username),
+		),
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton("🕝 10 минут").
+				WithCallbackData("cb_cons_Period_"+strconv.Itoa(int(query.From.ID))+"_10 МИНУТ"),
+			tu.InlineKeyboardButton("🕝 20 минут").
+				WithCallbackData("cb_cons_Period_"+strconv.Itoa(int(query.From.ID))+"_20 МИНУТ"),
+			tu.InlineKeyboardButton("🕝 30 минут").
+				WithCallbackData("cb_cons_Period_"+strconv.Itoa(int(query.From.ID))+"_30 МИНУТ"),
+		),
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton("🕝 1 час").
+				WithCallbackData("cb_cons_Period_"+strconv.Itoa(int(query.From.ID))+"_ЧАСА"),
+			tu.InlineKeyboardButton("🕝 1 день").
+				WithCallbackData("cb_cons_Period_"+strconv.Itoa(int(query.From.ID))+"_ДНЯ"),
+			tu.InlineKeyboardButton("🕝 В раб. день").
+				WithCallbackData("cb_cons_Period_"+strconv.Itoa(int(query.From.ID))+"_РАБОЧЕГО ДНЯ"),
+		),
+	)
+	switch q {
+	case "PayKKT":
+		inlineKeyboard := tu.InlineKeyboard(
+			tu.InlineKeyboardRow(
+				tu.InlineKeyboardButton("✔️Подтвердить отправку").WithCallbackData("cb_cons_PayKKTYes"),
+			),
+		)
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
+			utils.ConsultationPayKKT).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+	case "PayKKTYes":
+		_, _ = bot.SendSticker(tu.Sticker(tu.ID(VabTgId),
+			tu.FileFromID("CAACAgIAAxkBAAEoaBZlhvb7_eVfDNHhdvVb9zOS834EYAACgQEAAiteUwteCmw-bAABeLQzBA")))
+		_, _ = bot.SendMessage(tu.Message(tu.ID(VabTgId),
+			fmt.Sprintf(utils.ConsultationPayKKTYes, query.From.FirstName, query.From.LastName)).
+			WithReplyMarkup(inlineKeyboardPeriod).WithParseMode(telego.ModeHTML))
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
+			utils.ConsultationMesSend).
+			WithParseMode(telego.ModeHTML))
+	case "PayFnOfd":
+		inlineKeyboard := tu.InlineKeyboard(
+			tu.InlineKeyboardRow(
+				tu.InlineKeyboardButton("✔️Подтвердить отправку").WithCallbackData("cb_cons_PayFnOfdYes"),
+			),
+		)
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
+			utils.ConsultationPayFnOfd).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+	case "PayFnOfdYes":
+		_, _ = bot.SendSticker(tu.Sticker(tu.ID(VabTgId),
+			tu.FileFromID("CAACAgIAAxkBAAEoaBZlhvb7_eVfDNHhdvVb9zOS834EYAACgQEAAiteUwteCmw-bAABeLQzBA")))
+		_, _ = bot.SendMessage(tu.Message(tu.ID(VabTgId),
+			fmt.Sprintf(utils.ConsultationPayFnOfdYes, query.From.FirstName, query.From.LastName)).
+			WithReplyMarkup(inlineKeyboardPeriod).WithParseMode(telego.ModeHTML))
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
+			utils.ConsultationMesSend).
+			WithParseMode(telego.ModeHTML))
+	case "ServKKT":
+		inlineKeyboard := tu.InlineKeyboard(
+			tu.InlineKeyboardRow(
+				tu.InlineKeyboardButton("✔️Подтвердить отправку").WithCallbackData("cb_cons_ServKKTYes"),
+			),
+		)
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
+			utils.ConsultationServKKT).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+	case "ServKKTYes":
+		_, _ = bot.SendSticker(tu.Sticker(tu.ID(VabTgId),
+			tu.FileFromID("CAACAgIAAxkBAAEoaBZlhvb7_eVfDNHhdvVb9zOS834EYAACgQEAAiteUwteCmw-bAABeLQzBA")))
+		_, _ = bot.SendMessage(tu.Message(tu.ID(VabTgId),
+			fmt.Sprintf(utils.ConsultationServKKTYes, query.From.FirstName, query.From.LastName)).
+			WithReplyMarkup(inlineKeyboardPeriod).WithParseMode(telego.ModeHTML))
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
+			utils.ConsultationMesSend).
+			WithParseMode(telego.ModeHTML))
+	case "ServBuh":
+		inlineKeyboard := tu.InlineKeyboard(
+			tu.InlineKeyboardRow(
+				tu.InlineKeyboardButton("✔️Подтвердить отправку").WithCallbackData("cb_cons_ServBuhYes"),
+			),
+		)
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
+			utils.ConsultationServBuh).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+	case "ServBuhYes":
+		_, _ = bot.SendSticker(tu.Sticker(tu.ID(VabTgId),
+			tu.FileFromID("CAACAgIAAxkBAAEoaBZlhvb7_eVfDNHhdvVb9zOS834EYAACgQEAAiteUwteCmw-bAABeLQzBA")))
+		_, _ = bot.SendMessage(tu.Message(tu.ID(VabTgId),
+			fmt.Sprintf(utils.ConsultationServBuhYes, query.From.FirstName, query.From.LastName)).
+			WithReplyMarkup(inlineKeyboardPeriod).WithParseMode(telego.ModeHTML))
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
+			utils.ConsultationMesSend).
+			WithParseMode(telego.ModeHTML))
+	case "Period":
+		sds := strings.Split(query.Data, "_")[3]
+		ids, _ := strconv.ParseInt(sds, 10, 64)
+		answ_period := strings.Split(query.Data, "_")[4]
+		_, _ = bot.SendMessage(tu.Message(tu.ID(VabTgId),
+			fmt.Sprintf("👍 <b>Отправлено:</b> связь в течении %s", answ_period)).WithParseMode(telego.ModeHTML))
+
+		AnswerConsultation(bot, ids, answ_period)
+	}
+}
+
+func AnswerConsultation(bot *telego.Bot, id_ans int64, time_ans string) {
+	VabPhone := os.Getenv("VAB_PHONE")
+	_, _ = bot.SendSticker(tu.Sticker(tu.ID(id_ans),
+		tu.FileFromID("CAACAgIAAxkBAAEsBoFmbp43OPkseIFtScovWoy2ehKd1wACjwEAAiteUwtSWZbMUSUiwjUE")))
+	_, _ = bot.SendMessage(tu.Message(tu.ID(id_ans),
+		fmt.Sprintf("💬 <b>Ваше сообщение получено!</b>\n<i>В течении</i> <b>%s</b> <i>мы свяжемся с Вами через личное"+
+			" сообщение или позвоним, если Ваш номер не скрыт в Telegram. 😊\n"+
+			"Также Вы можете самостоятельно позвонить нам по номеру:</i> %s", time_ans, VabPhone)).WithParseMode(telego.ModeHTML))
 }

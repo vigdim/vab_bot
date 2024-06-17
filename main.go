@@ -5,15 +5,11 @@ import (
 	"github.com/joho/godotenv" // Загрузка настроек из .env файла
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
-	tu "github.com/mymmrac/telego/telegoutil"
-	models "vab/database"
-	"vab/handlers"
-	user_handlers "vab/handlers/user"
-
-	//"gorm.io/driver/mysql"
-	//"gorm.io/gorm"
 	"log"
 	"os"
+	"vab/database"
+	"vab/handlers"
+	"vab/handlers/user"
 )
 
 func main() {
@@ -24,15 +20,9 @@ func main() {
 	botToken := os.Getenv("TOKEN")
 
 	models.Init()
-	//SQLCON := os.Getenv("MYSQLCON")
-	//db, err := gorm.Open(mysql.Open(SQLCON), &gorm.Config{})
-	//db.AutoMigrate(&models.User4{})
-	//var result User4
-	//db.First(&result, 1)
-	//db.Create(&User4{Name: "Dmitry"})
 
-	// Note: Please keep in mind that default logger may expose sensitive information,
-	// use in development only
+	// Примечание. Средство ведения журнала по умолчанию может раскрывать конфиденциальную информацию.
+	// Использовать только в разработке
 	bot, err := telego.NewBot(botToken, telego.WithDefaultDebugLogger())
 	if err != nil {
 		fmt.Println(err)
@@ -55,48 +45,53 @@ func main() {
 	// user_services handlers message ==============================================================
 	// Переход в меню Каталог
 	bh.Handle(user_handlers.CatalogMess, th.TextEqual("📁 Каталог"))
+	// Переход в меню О компании
+	bh.Handle(user_handlers.AboutMess, th.TextEqual("©️О компании"))
 	// Переход в меню Каталог
 	bh.Handle(user_handlers.MainMenuMess, th.TextEqual("🔙 В НАЧАЛО"))
+	// Переход в меню Кабинет
+	bh.Handle(user_handlers.CabinetMess, th.TextEqual("👤 Кабинет"))
+	// Переход в меню Консультация
+	bh.Handle(user_handlers.ConsultationMess, th.TextEqual("💬 Консультация"))
 	// Переход в меню Купить ОФД (вывод списка ОФД)
 	bh.Handle(user_handlers.ListOfd, th.TextEqual("💵 Купить ОФД"))
 
 	// user_services handlers CallbackQuery =======================================================
 	// cback_ОФД
-	bh.HandleCallbackQuery(user_handlers.GetOneOfd, th.AnyCallbackQueryWithMessage(), th.CallbackDataPrefix("cb_OFD_"))
-	// ============================================================================================
+	bh.HandleCallbackQuery(user_handlers.GetOneOfdCb, th.AnyCallbackQueryWithMessage(), th.CallbackDataPrefix("cb_OFD_"))
+	// cback Консультация
+	bh.HandleCallbackQuery(user_handlers.ConsultationCb, th.AnyCallbackQueryWithMessage(), th.CallbackDataPrefix("cb_cons_"))
 
+	// ============================================================================================
 	// main_handlers ==============================================================================
-	bh.Handle(main_handlers.Start, th.CommandEqual("start")) //Вывод приветствия
+	bh.Handle(main_handlers.Start, th.CommandEqual("start"))    //Вывод приветствия
+	bh.Handle(main_handlers.SendMyData, th.TextEqual("telega")) //Вывод данных пользователя
 	//bh.Handle(handlers.SendLogo, th.TextEqual("88"))    //Вывод логотипа
 	// END HANDLERS BLOCK /////////////////////////////////////////////////////////////////////////
 
-	bh.HandleMessage(func(bot *telego.Bot, message telego.Message) {
-		fmt.Println("Start")
-	}, th.TextPrefix("st"))
-
-	// Register new handler with match on command `/sticker`
-	bh.Handle(func(bot *telego.Bot, update telego.Update) {
-		_, _ = bot.SendSticker(tu.Sticker(tu.ID(update.Message.Chat.ID), tu.FileFromID("CAACAgIAAxkBAAEoaBZlhvb7_eVfDNHhdvVb9zOS834EYAACgQEAAiteUwteCmw-bAABeLQzBA")))
-	}, th.CommandEqual("sticker"))
-
-	bh.Handle(func(bot *telego.Bot, update telego.Update) {
-		_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID), "Unknown command, use /start"))
-	}, th.TextSuffix("90"))
-
-	//file := utils.MustOpen("files/vab.png")
-	//bh.Handle(func(bot *telego.Bot, update telego.Update) {
-	//	_, _ = bot.SendPhoto(tu.Photo(tu.ID(update.Message.Chat.ID), tu.File(file)))
-	//}, th.TextSuffix("77"))
+	//http.HandleFunc("/", sayhello)       // Устанавливаем роутер
+	//err = http.ListenAndServe(":8080", nil) // устанавливаем порт веб-сервера
+	//if err != nil {
+	//	log.Fatal("ListenAndServe: ", err)
+	//}
+	//http.HandleFunc("/", sayhello)
+	//go http.ListenAndServe(":80", nil)
 
 	// Start handling updates
 	bh.Start()
 }
 
-// Helper function to open file or panic
-//func mustOpen(filename string) *os.File {
-//	file, err := os.Open(filename)
-//	if err != nil {
-//		panic(err)
-//	}
-//	return file
+//func sayhello(w http.ResponseWriter, r *http.Request) {
+//	fmt.Fprintf(w, "Привет!")
+//}
+//func NewRouter() http.Handler {
+//	router := chi.NewRouter()
+//	r.Get("/{name}", HelloName)
+//
+//	// Настройка раздачи статических файлов
+//	staticPath, _ := filepath.Abs("site/pages/")
+//	fs := http.FileServer(http.Dir(staticPath))
+//	router.Handle("/*", fs)
+//
+//	return r
 //}

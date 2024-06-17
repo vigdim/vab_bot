@@ -64,9 +64,11 @@ func Init() {
 // Имена таблиц и колонок в реальности создаются в нижнем регистре ================================
 type Users struct { // Таблица users
 	gorm.Model
-	Name string
-	TgID string
-	Role string
+	Name     string
+	TgID     string
+	Role     string
+	Email    string
+	Discount int
 }
 
 type Ofd struct { // Таблица ofds
