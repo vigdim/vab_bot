@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/mymmrac/telego"
+	tu "github.com/mymmrac/telego/telegoutil"
 	"os"
 )
 
@@ -21,4 +22,18 @@ func DelMessage(bot *telego.Bot, update telego.Update) {
 	DelMessParams.ChatID = mess.Chat.ChatID()
 	DelMessParams.MessageID = mess.MessageID
 	_ = bot.DeleteMessage(&DelMessParams)
+}
+
+func InlineKeyboardButtonSend(nameButton string, nameCallback string) *telego.InlineKeyboardMarkup {
+	inlineKeyboard := tu.InlineKeyboard(
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton(nameButton).
+				WithCallbackData(nameCallback),
+		),
+	)
+	return inlineKeyboard
+}
+
+func ConfirmSend(nameCallback string) *telego.InlineKeyboardMarkup {
+	return InlineKeyboardButtonSend("✔️Подтвердить отправку", nameCallback)
 }

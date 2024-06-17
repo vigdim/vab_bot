@@ -70,11 +70,8 @@ func GetOneOfdCb(bot *telego.Bot, query telego.CallbackQuery) {
 	var (
 		PeriodName     []models.Period
 		Price          []models.Price
-		inlineKeyboard = tu.InlineKeyboard(
-			tu.InlineKeyboardRow(
-				tu.InlineKeyboardButton("💵 Оплатить код активации 💵").WithCallbackData("callback_payofd"),
-			),
-		)
+		inlineKeyboard = utils.InlineKeyboardButtonSend(
+			"💵 Оплатить код активации 💵", "callback_payofd")
 	)
 
 	var Code, ofd_name = methods.GetDbOneOfd(query.Data)
@@ -125,7 +122,7 @@ func ConsultationMess(bot *telego.Bot, update telego.Update) {
 
 // ConsultationCb - Обработка кнопок консультации
 func ConsultationCb(bot *telego.Bot, query telego.CallbackQuery) {
-	var q = strings.Split(query.Data, "_")[2]
+	var choice = strings.Split(query.Data, "_")[2]
 	VabTgId, _ := strconv.ParseInt(os.Getenv("VAB_TG_ID"), 10, 64)
 	inlineKeyboardPeriod := tu.InlineKeyboard(
 		tu.InlineKeyboardRow(
@@ -148,13 +145,9 @@ func ConsultationCb(bot *telego.Bot, query telego.CallbackQuery) {
 				WithCallbackData("cb_cons_Period_"+strconv.Itoa(int(query.From.ID))+"_РАБОЧЕГО ДНЯ"),
 		),
 	)
-	switch q {
+	switch choice {
 	case "PayKKT":
-		inlineKeyboard := tu.InlineKeyboard(
-			tu.InlineKeyboardRow(
-				tu.InlineKeyboardButton("✔️Подтвердить отправку").WithCallbackData("cb_cons_PayKKTYes"),
-			),
-		)
+		inlineKeyboard := utils.ConfirmSend("cb_cons_PayKKTYes")
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
 			utils.ConsultationPayKKT).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 	case "PayKKTYes":
@@ -167,11 +160,7 @@ func ConsultationCb(bot *telego.Bot, query telego.CallbackQuery) {
 			utils.ConsultationMesSend).
 			WithParseMode(telego.ModeHTML))
 	case "PayFnOfd":
-		inlineKeyboard := tu.InlineKeyboard(
-			tu.InlineKeyboardRow(
-				tu.InlineKeyboardButton("✔️Подтвердить отправку").WithCallbackData("cb_cons_PayFnOfdYes"),
-			),
-		)
+		inlineKeyboard := utils.ConfirmSend("cb_cons_PayFnOfdYes")
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
 			utils.ConsultationPayFnOfd).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 	case "PayFnOfdYes":
@@ -184,11 +173,8 @@ func ConsultationCb(bot *telego.Bot, query telego.CallbackQuery) {
 			utils.ConsultationMesSend).
 			WithParseMode(telego.ModeHTML))
 	case "ServKKT":
-		inlineKeyboard := tu.InlineKeyboard(
-			tu.InlineKeyboardRow(
-				tu.InlineKeyboardButton("✔️Подтвердить отправку").WithCallbackData("cb_cons_ServKKTYes"),
-			),
-		)
+		inlineKeyboard := utils.ConfirmSend("cb_cons_ServKKTYes")
+
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
 			utils.ConsultationServKKT).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 	case "ServKKTYes":
@@ -201,11 +187,8 @@ func ConsultationCb(bot *telego.Bot, query telego.CallbackQuery) {
 			utils.ConsultationMesSend).
 			WithParseMode(telego.ModeHTML))
 	case "ServBuh":
-		inlineKeyboard := tu.InlineKeyboard(
-			tu.InlineKeyboardRow(
-				tu.InlineKeyboardButton("✔️Подтвердить отправку").WithCallbackData("cb_cons_ServBuhYes"),
-			),
-		)
+		inlineKeyboard := utils.ConfirmSend("cb_cons_ServBuhYes")
+
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
 			utils.ConsultationServBuh).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 	case "ServBuhYes":
