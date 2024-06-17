@@ -19,9 +19,8 @@ func Init() {
 
 	DB, err = gorm.Open(mysql.Open(SQLCON), &gorm.Config{})
 	//err = DB.AutoMigrate(&Ofd{}, &Period{}, &Price{}, &Buy{}, &Code{})
-	if err != nil {
-		log.Fatalf("Ошибка AutoMigrate функции %s", err)
-	}
+	//if err != nil {log.Fatalf("Ошибка AutoMigrate функции %s", err)}
+
 	//DB.Create(&Users{Name: "Dmitry"})
 
 	//var result Ofd
