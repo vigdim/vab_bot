@@ -18,26 +18,27 @@ func Start(bot *telego.Bot, update telego.Update) {
 		file := utils.MustOpen("files/admin.jpg")
 		_, _ = bot.SendPhoto(tu.Photo(tu.ID(update.Message.Chat.ID), tu.File(file)))
 		_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-			fmt.Sprintf("<b>Здравствуйте, %s!\nЗайдете под админом или пользователем?</b>",
+			fmt.Sprintf(utils.WellcomeAdminMessage,
 				update.Message.From.FirstName)).WithReplyMarkup(keyboards.Kb_admin_first).WithParseMode(telego.ModeHTML))
 	} else {
 		file := utils.MustOpen("files/vab.png")
 		_, _ = bot.SendPhoto(tu.Photo(tu.ID(update.Message.Chat.ID), tu.File(file)))
 		_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-			fmt.Sprintf("<b>Здравствуйте, %s!\nДобро пожаловать в сервис ККТ от компании ВАБ!</b>",
+			fmt.Sprintf(utils.WellcomeUserMessage,
 				update.Message.From.FirstName)).WithReplyMarkup(keyboards.Kb_main).WithParseMode(telego.ModeHTML))
 	}
 }
 
-// Start Register new handler with match on command `/start`
+// SendMyData Вывод данных пользователя по запросу
 func SendMyData(bot *telego.Bot, update telego.Update) {
-	tg_id := update.Message.From.ID
-	fname := update.Message.From.FirstName
-	lname := update.Message.From.LastName
-	uname := update.Message.From.Username
-	lang := update.Message.From.LanguageCode
+	var (
+		tgId         = update.Message.From.ID
+		firstName    = update.Message.From.FirstName
+		lastName     = update.Message.From.LastName
+		username     = update.Message.From.Username
+		languageCode = update.Message.From.LanguageCode
+	)
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-		fmt.Sprintf("<b>Твои данные:</b>\nTelegram id: <b><code>%s</code></b>\nFirst name: <b>%s</b>"+
-			"\nLast name: <b>%s</b>\nUser name: <b>%s</b>\nLanguage code: <b>%s</b>",
-			strconv.Itoa(int(tg_id)), fname, lname, uname, lang)).WithParseMode(telego.ModeHTML))
+		fmt.Sprintf(utils.MyDataMessage, strconv.Itoa(int(tgId)), firstName, lastName, username, languageCode)).
+		WithParseMode(telego.ModeHTML))
 }

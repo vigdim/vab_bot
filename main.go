@@ -24,7 +24,16 @@ func main() {
 
 	// Примечание. Средство ведения журнала по умолчанию может раскрывать конфиденциальную информацию.
 	// Использовать только в разработке
-	bot, err := telego.NewBot(botToken, telego.WithDefaultDebugLogger())
+	DebugMode := os.Getenv("DEBUG_MODE")
+	var BotOption telego.BotOption
+
+	if DebugMode == "Develop" {
+		BotOption = telego.WithDefaultDebugLogger()
+	} else {
+		BotOption = telego.WithDefaultLogger(false, true)
+	}
+
+	bot, err := telego.NewBot(botToken, BotOption)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -67,12 +76,9 @@ func main() {
 	// Переход в меню Каталог
 	bh.Handle(admin_handlers.MainUserMenuMess, th.TextEqual("👨‍💼Пользователь"))
 
-	// ============================================================================================
 	// main_handlers ==============================================================================
 	bh.Handle(main_handlers.Start, th.CommandEqual("start"))    //Вывод приветствия
 	bh.Handle(main_handlers.SendMyData, th.TextEqual("telega")) //Вывод данных пользователя
-	//bh.Handle(handlers.SendLogo, th.TextEqual("88"))    //Вывод логотипа
-	// END HANDLERS BLOCK /////////////////////////////////////////////////////////////////////////
 
 	// TODO: Clean code
 	//http.HandleFunc("/", sayhello)       // Устанавливаем роутер

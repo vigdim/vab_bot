@@ -28,7 +28,9 @@ RUN apk add tzdata && rm -rf /var/cache/apk/*
 WORKDIR /root/
 
 RUN mkdir ./bin
+RUN mkdir ./files
 RUN mkdir ./views
+COPY ./files ./files
 COPY ./views ./views
 
 #Copy the Pre-built binary file from the previous stage
