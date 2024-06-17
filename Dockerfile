@@ -1,8 +1,7 @@
 # Dockerfile References: https://docs.docker.com/engine/reference/builder/
 # Start from the latest golang base image
 FROM golang:latest as builder
-
-ENV GO111MODULE=on
+#ENV GO111MODULE=on
 
 WORKDIR /builder
 
@@ -29,8 +28,8 @@ RUN apk add tzdata && rm -rf /var/cache/apk/*
 WORKDIR /root/
 
 RUN mkdir ./bin
-RUN mkdir ./site
-COPY ./site ./site
+RUN mkdir ./views
+COPY ./views ./views
 
 #Copy the Pre-built binary file from the previous stage
 COPY --from=builder /builder/bin/app ./bin/

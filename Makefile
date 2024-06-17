@@ -92,7 +92,7 @@ endif
 docker-up:
 	@echo "\e[32;1mStarting container from image ${IMAGE_NAME}-$(GIT_COMMIT)\e[0m"
 	docker run -d -p 8091:3000 -e APP_ENV=release --restart=always \
-	-v ${PWD}/config:/root/config -v ${PWD}/data:/root/data \
+#	-v ${PWD}/config:/root/config -v ${PWD}/data:/root/data \
 	--name ${BIN_NAME} ${IMAGE_NAME}:$(GIT_COMMIT)
 	@echo "\e[36;1mDone...\e[0m \n"
 

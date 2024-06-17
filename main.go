@@ -69,6 +69,7 @@ func main() {
 	//bh.Handle(handlers.SendLogo, th.TextEqual("88"))    //Вывод логотипа
 	// END HANDLERS BLOCK /////////////////////////////////////////////////////////////////////////
 
+	// TODO: Clean code
 	//http.HandleFunc("/", sayhello)       // Устанавливаем роутер
 	//err = http.ListenAndServe(":8080", nil) // устанавливаем порт веб-сервера
 	//if err != nil {
@@ -81,6 +82,7 @@ func main() {
 	bh.Start()
 }
 
+// TODO: Move to handles or utils
 //func sayhello(w http.ResponseWriter, r *http.Request) {
 //	fmt.Fprintf(w, "Привет!")
 //}
@@ -89,7 +91,7 @@ func main() {
 //	r.Get("/{name}", HelloName)
 //
 //	// Настройка раздачи статических файлов
-//	staticPath, _ := filepath.Abs("site/pages/")
+//	staticPath, _ := filepath.Abs("views/pages/")
 //	fs := http.FileServer(http.Dir(staticPath))
 //	router.Handle("/*", fs)
 //
