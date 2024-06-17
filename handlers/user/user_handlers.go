@@ -46,32 +46,21 @@ func CabinetMess(bot *telego.Bot, update telego.Update) {
 
 // ListOfd - Меню покупки ОФД
 func ListOfd(bot *telego.Bot, update telego.Update) {
-
 	var ofds, len_ofds = methods.GetDbAllOfd()
-
 	var bnOfd = make([]telego.InlineKeyboardButton, len_ofds)
 	var bnDesc = make([]telego.InlineKeyboardButton, len_ofds)
-	var row = make([][]telego.InlineKeyboardButton, len_ofds)
+	var grid = make([][]telego.InlineKeyboardButton, len_ofds)
 
 	for index, value := range ofds {
-		//fmt.Println(index, value)
 		bnOfd[index] = tu.InlineKeyboardButton(value.OfdName).WithCallbackData("cb_OFD_" + value.OfdName + "_id_" + strconv.Itoa(int(value.ID)))
 		bnDesc[index] = tu.InlineKeyboardButton("Описание").WithWebApp(tu.WebAppInfo(value.OfdLink))
-		//row = append(row, bnOfd[index], bnDesc[index])
-		row[index] = append(row[index], bnOfd[index], bnDesc[index])
+		grid[index] = append(grid[index], bnOfd[index], bnDesc[index])
 	}
 
-	inlineKeyboard := tu.InlineKeyboardGrid(row)
+	inlineKeyboard := tu.InlineKeyboardGrid(grid)
 
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-		"<b>Выберите оператора ОФД</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
-}
-
-func ListOfd2(bot *telego.Bot, update telego.Update, ikb []telego.InlineKeyboardButton) {
-	inlineKeyboard := tu.InlineKeyboard(ikb)
-
-	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-		"Оператор ОФД: "+ikb[0].Text).WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+		"<b>Выберите оператора ОФД:</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 }
 
 // GetOneOfdCb - щелчек по кнопке оператора ОФД
