@@ -51,14 +51,7 @@ func ListOfd(bot *telego.Bot, update telego.Update) {
 
 	var bnOfd = make([]telego.InlineKeyboardButton, len_ofds)
 	var bnDesc = make([]telego.InlineKeyboardButton, len_ofds)
-
-	//row1 := tu.InlineKeyboardRow()
-	//row2 := tu.InlineKeyboardRow()
-	//row3 := tu.InlineKeyboardRow()
-	//row4 := tu.InlineKeyboardRow()
-	//row5 := tu.InlineKeyboardRow()
-	//row6 := tu.InlineKeyboardRow()
-	var row [6][]telego.InlineKeyboardButton
+	var row = make([][]telego.InlineKeyboardButton, len_ofds)
 
 	for index, value := range ofds {
 		//fmt.Println(index, value)
@@ -66,20 +59,12 @@ func ListOfd(bot *telego.Bot, update telego.Update) {
 		bnDesc[index] = tu.InlineKeyboardButton("Описание").WithWebApp(tu.WebAppInfo(value.OfdLink))
 		//row = append(row, bnOfd[index], bnDesc[index])
 		row[index] = append(row[index], bnOfd[index], bnDesc[index])
-		ListOfd2(bot, update, row[index])
 	}
-	//ListOfd2(bot, update, row)
-	//row1 = append(row1, bnOfd[0], bnDesc[0])
-	//row2 = append(row2, bnOfd[1], bnDesc[1])
-	//row3 = append(row3, bnOfd[2], bnDesc[2])
-	//row4 = append(row4, bnOfd[3], bnDesc[3])
-	//row5 = append(row5, bnOfd[4], bnDesc[4])
-	//row6 = append(row6, bnOfd[5], bnDesc[5])
 
-	//inlineKeyboard := tu.InlineKeyboard(row[0])
-	//
-	//_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-	//	"<b>Выберите оператора ОФД</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+	inlineKeyboard := tu.InlineKeyboardGrid(row)
+
+	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+		"<b>Выберите оператора ОФД</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 }
 
 func ListOfd2(bot *telego.Bot, update telego.Update, ikb []telego.InlineKeyboardButton) {
