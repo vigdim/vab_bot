@@ -10,7 +10,7 @@ import (
 	"vab/database"
 	"vab/handlers"
 	admin_handlers "vab/handlers/admin"
-	"vab/handlers/user"
+	user_handlers "vab/handlers/user"
 )
 
 func main() {
