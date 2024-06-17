@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>user-services</title>
+    <link rel="stylesheet" href="static/services/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/services/assets/fonts/fontawesome-all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="static/services/assets/js/jquery.min.js"></script>
+    <script src="static/services/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="static/services/assets/js/bs-init.js"></script>
+
+    <script type="application/javascript">
+        let params = (new URL(document.location)).searchParams;
+
+        async function getService() {
+            const myHeaders = new Headers();
+            myHeaders.append("User-Agent", "Apidog/1.0.0 (https://apidog.com)");
+            myHeaders.append("Accept", "*/*");
+            myHeaders.append("Host", "statutbot.ru");
+            myHeaders.append("Connection", "keep-alive");
+
+            const requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+            let param_us_id = params.get("us_id");
+            let resp;
+            await fetch("https://statutbot.ru/api/get_user_service_one/" + param_us_id, requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    resp = result
+                })
+                .catch(error => console.log('error', error));
+
+            let data = JSON.parse(resp);
+            let title = data.title;
+            let description = data.description;
+            let contacts = data.contacts;
+            let photo_url = data.photo_url;
+            let phone = data.phone;
+
+            function sleepFor(sleepDuration) {
+                let now = new Date().getTime();
+                while (new Date().getTime() < now + sleepDuration) {
+                    /* Do nothing */
+                }
+            }
+
+            document.getElementById("title").innerHTML = title;
+            document.getElementById("description").innerHTML = description;
+            document.getElementById("contacts").innerHTML = contacts;
+            document.getElementById("phone").innerHTML = phone;
+            // sleepFor(100);
+            if (photo_url.length !== 0)
+                document.getElementById('photo_url').src = "static/services/img/" + photo_url;
+            else
+                document.getElementById('photo_url').src = "static/services/assets/img/logo-baner.jpg";
+
+        }
+    </script>
+
+    <script>
+
+        getService();
+
+        const WebApp = window.Telegram.WebApp;
+        WebApp.expand(); //расширяем на все окно
+        WebApp.MainButton.text = "ЗАКРЫТЬ";
+        WebApp.MainButton.show(); //показываем главную кнопку
+
+        //WebApp.sentAlert(imgUrl);
+
+        WebApp.onEvent('mainButtonClicked', function () {
+            //WebApp.sendData("fulldata");
+
+            WebApp.close();
+        });
+
+    </script>
+
+
+</head>
+<body>
+<script type="application/javascript">
+    $(document).on('click', '#btn_bookmarks', function () {
+        let us_id = params.get("us_id");
+        let tg_user_id = params.get("tg_user_id");
+
+
+        let formData = new FormData();
+        formData.append("tg_user_id", tg_user_id);
+        formData.append("us_id", us_id);
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://statutbot.ru/api/user_service_bookmarks_add");
+        xhr.send(formData);
+
+        WebApp.showAlert('Объявление добавлено в закладки.\nИщи закладки в меню 👤Кабинет.\'');
+    });
+</script>
+
+
+<div class="card">
+    <div class="card-body" style="text-align: center;"><img id="photo_url"
+                                                            src="static/services/assets/img/logo-baner.jpg"
+                                                            style="width: 98%;">
+        <hr>
+        <div style="text-align: right;">
+            <button class="btn btn-success" type="submit" id="btn_bookmarks" style="margin-left: 10px;width: 140px;"><i
+                    class="fas fa-bookmark text-warning" aria-hidden="true"></i> В закладки
+            </button>
+        </div>
+        <hr>
+        <h6 class="text-start text-primary"><i class="fa fa-font" aria-hidden="true"></i> Заголовок:</h6>
+        <p id="title" class="text-start"></p>
+        <hr>
+        <h6 class="text-start text-primary"><i class="fa fa-align-left" aria-hidden="true"></i> Описание работы /
+            услуги:</h6>
+        <p id="description" class="text-start"></p>
+        <hr>
+        <h6 class="text-start text-primary"><i class="fa fa-map-marker" aria-hidden="true"></i> Контактные данные:</h6>
+        <p id="contacts" class="text-start"></p>
+        <hr>
+        <h6 class="text-start text-primary"><i class="fa fa-mobile"></i> Подтверждённый номер:</h6>
+        <p id="phone" class="text-start"></p>
+    </div>
+</div>
+
+
+</body>
+
+</html>
