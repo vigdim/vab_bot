@@ -46,10 +46,12 @@ func CabinetMess(bot *telego.Bot, update telego.Update) {
 
 // ListOfd - Меню покупки ОФД
 func ListOfd(bot *telego.Bot, update telego.Update) {
-	var ofds, len_ofds = methods.GetDbAllOfd()
-	var bnOfd = make([]telego.InlineKeyboardButton, len_ofds)
-	var bnDesc = make([]telego.InlineKeyboardButton, len_ofds)
-	var grid = make([][]telego.InlineKeyboardButton, len_ofds)
+	var (
+		ofds, lenOfds = methods.GetDbAllOfd()
+		bnOfd         = make([]telego.InlineKeyboardButton, lenOfds)
+		bnDesc        = make([]telego.InlineKeyboardButton, lenOfds)
+		grid          = make([][]telego.InlineKeyboardButton, lenOfds)
+	)
 
 	for index, value := range ofds {
 		bnOfd[index] = tu.InlineKeyboardButton(value.OfdName).WithCallbackData("cb_OFD_" + value.OfdName + "_id_" + strconv.Itoa(int(value.ID)))
