@@ -6,10 +6,11 @@ import (
 )
 
 // GetUser - Получаем пользователя
-func GetUser() string {
-	var result models.Users
-	models.DB.First(&result, 1)
-	return result.Name
+func GetUser(TgId int64) ([]models.Users, bool) {
+	var User []models.Users
+	result := models.DB.First(&User, "tg_id = ?", TgId) // Ищем в базе Users запись с TgId текущего пользователя
+	UserYesNo := result.RowsAffected > 0
+	return User, UserYesNo
 }
 
 // GetDbAllOfd - Получаем всех ОФД операторов и их количество

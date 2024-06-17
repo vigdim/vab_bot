@@ -1,9 +1,11 @@
 package keyboards
 
-//// Kb_main - Главное меню
-//var Kb_main = tu.Keyboard(
-//	tu.KeyboardRow( // Row 1
-//		tu.KeyboardButton("📁 Каталог"),
-//		tu.KeyboardButton("👤 Кабинет"),
-//	),
-//).WithResizeKeyboard().WithInputFieldPlaceholder("Нажмите на кнопку")
+import tu "github.com/mymmrac/telego/telegoutil"
+
+// Kb_admin_first - Начальное меню админа
+var Kb_admin_first = tu.Keyboard(
+	tu.KeyboardRow(
+		tu.KeyboardButton("🥷️Админ"),
+		tu.KeyboardButton("👨‍💼Пользователь"),
+	),
+).WithResizeKeyboard().WithInputFieldPlaceholder("Нажмите на кнопку")

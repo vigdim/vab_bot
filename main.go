@@ -9,6 +9,7 @@ import (
 	"os"
 	"vab/database"
 	"vab/handlers"
+	admin_handlers "vab/handlers/admin"
 	"vab/handlers/user"
 )
 
@@ -42,7 +43,7 @@ func main() {
 	defer bot.StopLongPolling()
 
 	// START HANDLERS BLOCK ///////////////////////////////////////////////////////////////////////
-	// user_services handlers message ==============================================================
+	// user handlers message ==============================================================
 	// Переход в меню Каталог
 	bh.Handle(user_handlers.CatalogMess, th.TextEqual("📁 Каталог"))
 	// Переход в меню О компании
@@ -56,11 +57,15 @@ func main() {
 	// Переход в меню Купить ОФД (вывод списка ОФД)
 	bh.Handle(user_handlers.ListOfd, th.TextEqual("💵 Купить ОФД"))
 
-	// user_services handlers CallbackQuery =======================================================
+	// user handlers CallbackQuery =======================================================
 	// cback_ОФД
 	bh.HandleCallbackQuery(user_handlers.GetOneOfdCb, th.AnyCallbackQueryWithMessage(), th.CallbackDataPrefix("cb_OFD_"))
 	// cback Консультация
 	bh.HandleCallbackQuery(user_handlers.ConsultationCb, th.AnyCallbackQueryWithMessage(), th.CallbackDataPrefix("cb_cons_"))
+
+	// admin handlers message ==============================================================
+	// Переход в меню Каталог
+	bh.Handle(admin_handlers.MainUserMenuMess, th.TextEqual("👨‍💼Пользователь"))
 
 	// ============================================================================================
 	// main_handlers ==============================================================================
