@@ -67,11 +67,16 @@ func ListOfd(bot *telego.Bot, update telego.Update) {
 
 // GetOneOfdCb - щелчек по кнопке оператора ОФД
 func GetOneOfdCb(bot *telego.Bot, query telego.CallbackQuery) {
-	inlineKeyboard := tu.InlineKeyboard(
-		tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton("💵 Оплатить код активации 💵").WithCallbackData("callback_payofd"),
-		),
+	var (
+		PeriodName     []models.Period
+		Price          []models.Price
+		inlineKeyboard = tu.InlineKeyboard(
+			tu.InlineKeyboardRow(
+				tu.InlineKeyboardButton("💵 Оплатить код активации 💵").WithCallbackData("callback_payofd"),
+			),
+		)
 	)
+
 	var Code, ofd_name = methods.GetDbOneOfd(query.Data)
 	if len(Code) == 0 {
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
@@ -79,8 +84,6 @@ func GetOneOfdCb(bot *telego.Bot, query telego.CallbackQuery) {
 				" ОФД временно недоступны.\nВойдите в меню 💬 <b>Консультация</b> для решения проблемы.").WithParseMode(telego.ModeHTML))
 	}
 	_ = bot.AnswerCallbackQuery(tu.CallbackQuery(query.ID).WithText(strings.Split(query.Data, "_")[2]))
-	var PeriodName []models.Period
-	var Price []models.Price
 
 	for index := range Code {
 		models.DB.First(&PeriodName, Code[index].PeriodID)

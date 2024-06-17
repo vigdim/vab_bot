@@ -18,7 +18,7 @@ func Init() {
 	SQLCON := os.Getenv("MYSQLCON")
 
 	DB, err = gorm.Open(mysql.Open(SQLCON), &gorm.Config{})
-	//err = DB.AutoMigrate(&Ofd{}, &Period{}, &Price{}, &Buy{}, &Code{})
+	err = DB.AutoMigrate(&Ofd{}, &Period{}, &Price{}, &Buy{}, &Code{})
 	if err != nil {
 		log.Fatalf("Ошибка AutoMigrate функции %s", err)
 	}
@@ -52,12 +52,11 @@ func Init() {
 	//	OfdName:    resultOfd.OfdName,
 	//	CodeNum:    resultCode.CodeNum,
 	//	PeriodName: resultPeriod.PeriodName,
-	//	Price:      float32(price),
+	//	Price:      uint64(price),
 	//})
 
 	//=============
 	//DB.Where("code_num = ?", "333333555555").Delete(&Code{}) // Помечено как удаленное с возможностью восстановления
-	//DB.Where("code_num = ?", "333333555555").Unscoped().Delete(&Code{})
 }
 
 // БЛОК ОПИСАНИЯ ТАБЛИЦ ///////////////////////////////////////////////////////////////////////////
@@ -97,7 +96,7 @@ type Buy struct { // Таблица buys
 	OfdName    string
 	CodeNum    string
 	PeriodName string
-	Price      float32
+	Price      uint64
 }
 
 type Code struct { // Таблица codes
