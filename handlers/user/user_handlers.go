@@ -221,6 +221,9 @@ func AnswerConsultation(bot *telego.Bot, id_ans int64, time_ans string) {
 			"Также Вы можете самостоятельно позвонить нам по номеру:</i> %s", time_ans, VabPhone)).WithParseMode(telego.ModeHTML))
 }
 
+// OrdersMess - Переход в меню Заказы (вывод списка купленных ОФД кодов)
 func OrdersMess(bot *telego.Bot, update telego.Update) {
-
+	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
+	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+		"<b>Меню 🧾 Заказы</b>").WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
 }
