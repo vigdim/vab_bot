@@ -223,7 +223,18 @@ func AnswerConsultation(bot *telego.Bot, id_ans int64, time_ans string) {
 
 // OrdersMess - Переход в меню Заказы (вывод списка купленных ОФД кодов)
 func OrdersMess(bot *telego.Bot, update telego.Update) {
+	var Buys, lenBuys = methods.GetDbBuyOfd(update.Message.From.ID)
 	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-		"<b>Меню 🧾 Заказы</b>").WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
+		fmt.Sprintf("<b>💵 Приобретенные ранее коды ОФД:</b>")).WithParseMode(telego.ModeHTML))
+	if lenBuys > 0 {
+		for index, value := range Buys {
+
+			_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+				fmt.Sprintf("%s. <b>%s</b> Дата: %s\nПериод: %s. Код: <code>%s</code>", strconv.Itoa(index+1), value.OfdName, value.CreatedAt.Format("02-01-2006"), value.PeriodName, value.CodeNum)).WithParseMode(telego.ModeHTML))
+		}
+	} else {
+		_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+			fmt.Sprintf("Приобретенные коды ОФД отсутствуют 😢.")).WithParseMode(telego.ModeHTML))
+	}
 }
