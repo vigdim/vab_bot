@@ -29,6 +29,13 @@ func GetDbOneOfd(data_query string) ([]models.Code, string) {
 	var Code []models.Code
 	models.DB.Distinct("period_id", "price_id").Where("ofd_id = ?", ofd_id).Order("price_id asc").Find(&Code)
 
-	//models.DB.Where("ofd_id = ?", ofd_id).First(&Code)
 	return Code, ofd_name
+}
+
+// GetDbBuyOfd - Получаем все купленные коды ОФД
+func GetDbBuyOfd(TgId int64) ([]models.Buy, int64) {
+	var Buy []models.Buy
+	result := models.DB.Find(&Buy).Where("tg_id = ?", TgId).Order("id asc")
+
+	return Buy, result.RowsAffected
 }
