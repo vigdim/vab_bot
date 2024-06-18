@@ -220,3 +220,7 @@ func AnswerConsultation(bot *telego.Bot, id_ans int64, time_ans string) {
 			" сообщение или позвоним, если Ваш номер не скрыт в Telegram. 😊\n"+
 			"Также Вы можете самостоятельно позвонить нам по номеру:</i> %s", time_ans, VabPhone)).WithParseMode(telego.ModeHTML))
 }
+
+func OrdersMess(bot *telego.Bot, update telego.Update) {
+
+}

@@ -65,6 +65,8 @@ func main() {
 	bh.Handle(user_handlers.ConsultationMess, th.TextEqual("💬 Консультация"))
 	// Переход в меню Купить ОФД (вывод списка ОФД)
 	bh.Handle(user_handlers.ListOfd, th.TextEqual("💵 Купить ОФД"))
+	// Переход в меню Заказы (вывод списка купленных ОФД кодов)
+	bh.Handle(user_handlers.OrdersMess, th.TextEqual("🧾 Заказы"))
 
 	// user handlers CallbackQuery =======================================================
 	// cback_ОФД
