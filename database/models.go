@@ -19,7 +19,9 @@ func Init() {
 
 	DB, err = gorm.Open(mysql.Open(SQLCON), &gorm.Config{})
 	//err = DB.AutoMigrate(&Ofd{}, &Period{}, &Price{}, &Buy{}, &Code{}, &Users{})
-	//if err != nil {log.Fatalf("Ошибка AutoMigrate функции %s", err)}
+	//if err != nil {
+	//	log.Fatalf("Ошибка AutoMigrate функции %s", err)
+	//}
 }
 
 // БЛОК ОПИСАНИЯ ТАБЛИЦ ///////////////////////////////////////////////////////////////////////////
@@ -60,12 +62,13 @@ type Price struct {
 // Buy Таблица buys
 type Buy struct {
 	gorm.Model
-	TgId       string
-	Email      string
-	OfdName    string
-	CodeNum    string
-	PeriodName string
-	Price      uint64
+	TgId         string
+	Email        string
+	OfdName      string
+	CodeNum      string
+	PeriodName   string
+	Price        uint64
+	PurchaseLink string
 }
 
 // Code Таблица codes
