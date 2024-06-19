@@ -15,11 +15,18 @@ func Hello(ctx *fasthttp.RequestCtx) {
 	fmt.Fprintf(ctx, "Hello, %s!\n", ctx.UserValue("name"))
 }
 
+func GetAccount(ctx *fasthttp.RequestCtx) {
+	//fasthttp.
+}
+
 func Init() {
 	r := router.New()
 	r.GET("/", Index)
 	r.GET("/hello/{name}", Hello)
+	r.GET("/getaccount", GetAccount)
 
+	// ngrok http --domain=workable-grouse-clean.ngrok-free.app 80
+	// https://workable-grouse-clean.ngrok-free.app/
 	log.Fatal(fasthttp.ListenAndServe(":80", r.Handler))
 }
 
