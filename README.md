@@ -1,9 +1,5 @@
-# About2
+# About
 Бот по продаже лицензий ОФД и Каталог товаров и услуг
 
-main.go -> func main()
-
-bot, err := telego.NewBot(botToken, telego.WithDefaultDebugLogger())
-
-При продакшене удалить/закомментить функцию - telego.WithDefaultDebugLogger()
-
+DEBUG_MODE=Develop # or Production
+При продакшене внести изменение в .env на Production
