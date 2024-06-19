@@ -32,6 +32,7 @@ RUN mkdir ./files
 RUN mkdir ./views
 COPY ./files ./files
 COPY ./views ./views
+COPY .env .env
 
 #Copy the Pre-built binary file from the previous stage
 COPY --from=builder /builder/bin/app ./bin/
