@@ -27,7 +27,7 @@ var Kb_catalog = tu.Keyboard(
 // Kb_сabinet - Меню кабинета
 var Kb_сabinet = tu.Keyboard(
 	tu.KeyboardRow(
-		tu.KeyboardButton("✉️ E-mail"),
+		tu.KeyboardButton("👤 Аккаунт"),
 		tu.KeyboardButton("🧾 Заказы"),
 	),
 	tu.KeyboardRow(

@@ -44,6 +44,20 @@ func CabinetMess(bot *telego.Bot, update telego.Update) {
 		"<b>Меню 👤 Кабинет</b>").WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
 }
 
+// AccountMess Меню - Аккаунт
+func AccountMess(bot *telego.Bot, update telego.Update) {
+	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
+	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+		"<b>Меню 👤 Аккаунт</b>").WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
+	inlineKeyboard := tu.InlineKeyboard(
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton("Внести свои данные").WithWebApp(tu.WebAppInfo("https://statutbot.ru/user-service-edit?us_id=1")),
+		),
+	)
+	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+		"<b>Данные для удобства</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+}
+
 // ListOfd - Меню покупки ОФД
 func ListOfd(bot *telego.Bot, update telego.Update) {
 	var (

@@ -47,6 +47,8 @@ func Init() {
 	bh.Handle(user_handlers.MainMenuMess, th.TextEqual("🔙 В НАЧАЛО"))
 	// Переход в меню Кабинет
 	bh.Handle(user_handlers.CabinetMess, th.TextEqual("👤 Кабинет"))
+	// Переход в меню Аккаунт
+	bh.Handle(user_handlers.AccountMess, th.TextEqual("👤 Аккаунт"))
 	// Переход в меню Консультация
 	bh.Handle(user_handlers.ConsultationMess, th.TextEqual("💬 Консультация"))
 	// Переход в меню Купить ОФД (вывод списка ОФД)

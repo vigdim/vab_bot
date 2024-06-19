@@ -4,6 +4,7 @@ import (
 	"github.com/joho/godotenv" // Загрузка настроек из .env файла
 	models "github.com/vigdim/vab_bot/database"
 	botrouter "github.com/vigdim/vab_bot/router/bot"
+	siterouter "github.com/vigdim/vab_bot/router/http"
 	"log"
 )
 
@@ -14,5 +15,6 @@ func main() {
 	}
 
 	models.Init()
-	botrouter.Init()
+	go botrouter.Init()
+	siterouter.Init()
 }
