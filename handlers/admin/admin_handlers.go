@@ -3,8 +3,8 @@ package admin_handlers
 import (
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
-	"vab/keyboards"
-	"vab/utils"
+	"github.com/vigdim/vab_bot/keyboards"
+	"github.com/vigdim/vab_bot/utils"
 )
 
 // MainUserMenuMess - Главное меню пользователя

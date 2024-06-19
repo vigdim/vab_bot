@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
+	"github.com/vigdim/vab_bot/database"
+	"github.com/vigdim/vab_bot/database/methods"
+	"github.com/vigdim/vab_bot/keyboards"
+	"github.com/vigdim/vab_bot/utils"
 	"os"
 	"strconv"
 	"strings"
-	"vab/database"
-	"vab/database/methods"
-	"vab/keyboards"
-	"vab/utils"
 )
 
 // CatalogMess Меню - Каталог

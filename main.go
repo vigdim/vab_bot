@@ -5,12 +5,12 @@ import (
 	"github.com/joho/godotenv" // Загрузка настроек из .env файла
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
+	models "github.com/vigdim/vab_bot/database"
+	main_handlers "github.com/vigdim/vab_bot/handlers"
+	admin_handlers "github.com/vigdim/vab_bot/handlers/admin"
+	user_handlers "github.com/vigdim/vab_bot/handlers/user"
 	"log"
 	"os"
-	"vab/database"
-	"vab/handlers"
-	admin_handlers "vab/handlers/admin"
-	user_handlers "vab/handlers/user"
 )
 
 func main() {
@@ -24,14 +24,9 @@ func main() {
 
 	// Примечание. Средство ведения журнала по умолчанию может раскрывать конфиденциальную информацию.
 	// Использовать только в разработке
-	DebugMode := os.Getenv("DEBUG_MODE")
-	var BotOption telego.BotOption
-
-	if DebugMode == "Develop" {
-		BotOption = telego.WithDefaultDebugLogger()
-	} else {
-		BotOption = telego.WithDefaultLogger(false, true)
-	}
+	debugMode := os.Getenv("DEBUG_MODE")
+	printErrors := os.Getenv("PRINT_ERRORS")
+	var BotOption = telego.WithDefaultLogger((debugMode == "Develop"), (printErrors == "Yes"))
 
 	bot, err := telego.NewBot(botToken, BotOption)
 	if err != nil {

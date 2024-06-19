@@ -1,8 +1,8 @@
 package methods
 
 import (
+	"github.com/vigdim/vab_bot/database"
 	"strings"
-	"vab/database"
 )
 
 // GetUser - Получаем пользователя

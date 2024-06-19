@@ -1,7 +1,7 @@
 package methods
 
 import (
-	"vab/database"
+	"github.com/vigdim/vab_bot/database"
 )
 
 // AddUser - Создаем пользователя

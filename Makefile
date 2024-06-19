@@ -23,24 +23,11 @@ PREV_CONTAINERS=$(shell docker ps -qa --no-trunc --filter 'name=$(BIN_NAME)*' -q
 
 default: help
 
-help-alt: ## Display this help screen
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
-
 help:
-	@echo 'Management commands:'
+	@echo 'Management commands for $(PROJECT_NAME):'
 	@echo
 	@echo 'Usage:'
-	@echo '    make run             Run the project with tests.'
-	@echo '    make build           Compile the project.'
-	@echo '    make bin-run         Compile and run binary the project.'
-	@echo '    make bench           Bench the project.'
-	@echo '    make docker-build    Compile optimized for alpine linux.'
-	@echo '    make docker-up       Running docker image for alpine linux.'
-	@echo '    make tag             Tag image created by package with latest, git commit and version'
-	@echo '    make test            Run tests on a compiled project.'
-	@echo '    make push            Push tagged images to registry'
-	@echo '    make clean           Clean the directory tree.'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "   make \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 	@echo
 
 coverage: ## Generate global code coverage report
@@ -75,7 +62,7 @@ ifneq ($(PREV_IMAGES),)
 	@echo "\e[36;1mDone...\e[0m \n"
 endif
 
-docker-build: docker-rmi
+docker-build: docker-rmi ## Compile optimized for alpine linux.
 	@echo "\e[33;1mBuilding image ${IMAGE_NAME}\e[0m"
 	docker build -t ${IMAGE_NAME}:$(GIT_COMMIT) .
 	@echo "\e[36;1mDone...\e[0m \n"
@@ -88,8 +75,7 @@ ifneq ($(PREV_CONTAINERS),)
 	@echo "\e[36;1mDone...\e[0m \n"
 endif
 
-
-docker-up:
+docker-up: ## Running docker image for alpine linux.
 	@echo "\e[32;1mStarting container from image ${IMAGE_NAME}-$(GIT_COMMIT)\e[0m"
 	docker run -d -p 8091:3000 -e APP_ENV=release --restart=always \
 #	-v ${PWD}/config:/root/config -v ${PWD}/data:/root/data \
@@ -99,7 +85,7 @@ docker-up:
 docker-log:
 	docker container logs $(PREV_CONTAINERS) -f
 
-test: install
+test: install ## Run tests on a compiled project.
 	@echo -e "\e[32;1mStarting tests...\e[0m"
 	go test $(GOFLAGS) ./...
 
@@ -113,13 +99,13 @@ clean: ## Clean the directory tree.
 	go clean $(GOFLAGS) -i ./...
 	@echo "\e[36;1mDone...\e[0m \n"
 
-tag: docker-build
+docker-tag: docker-build ## Tag image created by package with latest, git commit and version.
 	@echo "Tagging: latest ${VERSION} $(GIT_COMMIT)"
 	docker tag $(IMAGE_NAME):local $(IMAGE_NAME):$(GIT_COMMIT)
 	docker tag $(IMAGE_NAME):local $(IMAGE_NAME):${VERSION}
 	docker tag $(IMAGE_NAME):local $(IMAGE_NAME):latest
 
-push: tag
+docker-push: docker-tag ## Push tagged images to registry
 	@echo "Pushing docker image to registry: latest ${VERSION} $(GIT_COMMIT)"
 	docker push $(IMAGE_NAME):$(GIT_COMMIT)
 	docker push $(IMAGE_NAME):${VERSION}
