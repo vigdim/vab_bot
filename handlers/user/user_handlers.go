@@ -229,12 +229,14 @@ func OrdersMess(bot *telego.Bot, update telego.Update) {
 		fmt.Sprintf("<b>💵 Приобретенные ранее коды ОФД:</b>")).WithParseMode(telego.ModeHTML))
 	if lenBuys > 0 {
 		for index, value := range Buys {
-
 			_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-				fmt.Sprintf("%s. <b>%s</b> Дата: %s\nПериод: %s. Код: <code>%s</code>", strconv.Itoa(index+1), value.OfdName, value.CreatedAt.Format("02-01-2006"), value.PeriodName, value.CodeNum)).WithParseMode(telego.ModeHTML))
+				fmt.Sprintf("%s. <b>%s</b> Дата: %s\nПериод: %s. Код: <code>%s</code>\n<b><a href=\"%s\">Смотреть чек оплаты</a></b>",
+					strconv.Itoa(index+1), value.OfdName, value.CreatedAt.Format("02-01-2006"), value.PeriodName, value.CodeNum, value.PurchaseLink)).WithParseMode(telego.ModeHTML))
 		}
 	} else {
 		_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
 			fmt.Sprintf("Приобретенные коды ОФД отсутствуют 😢.")).WithParseMode(telego.ModeHTML))
 	}
 }
+
+//.WithWebApp(tu.WebAppInfo(value.OfdLink))
