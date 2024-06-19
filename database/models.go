@@ -18,49 +18,15 @@ func Init() {
 	SQLCON := os.Getenv("MYSQLCON")
 
 	DB, err = gorm.Open(mysql.Open(SQLCON), &gorm.Config{})
-	//err = DB.AutoMigrate(&Ofd{}, &Period{}, &Price{}, &Buy{}, &Code{})
+	//err = DB.AutoMigrate(&Ofd{}, &Period{}, &Price{}, &Buy{}, &Code{}, &Users{})
 	//if err != nil {log.Fatalf("Ошибка AutoMigrate функции %s", err)}
-
-	//DB.Create(&Users{Name: "Dmitry"})
-
-	//var result Ofd
-	//DB.Where("ofd_name = ?", "One").First(&result)
-	//DB.Create(&Code{
-	//	Model:    gorm.Model{},
-	//	CodeNum:  "156723",
-	//	OfdID:    result.ID,
-	//	PeriodID: 1,
-	//	PriceID:  1,
-	//})
-
-	//var resultCode Code
-	//DB.Where("code_num = ?", "156723").First(&resultCode)
-	//var resultOfd Ofd
-	//DB.Where("id = ?", resultCode.OfdID).First(&resultOfd)
-	//var resultPeriod Period
-	//DB.Where("id = ?", resultCode.PeriodID).First(&resultPeriod)
-	//var resultPrice Price
-	//DB.Where("id = ?", resultCode.PeriodID).First(&resultPrice)
-	//price, _ := strconv.ParseFloat(resultPrice.Price, 32)
-	//
-	//tgId := "1234567890"
-	//DB.Create(&Buy{
-	//	Model:      gorm.Model{},
-	//	TgId:       tgId,
-	//	Email:      "aaa@bbb.com",
-	//	OfdName:    resultOfd.OfdName,
-	//	CodeNum:    resultCode.CodeNum,
-	//	PeriodName: resultPeriod.PeriodName,
-	//	Price:      uint64(price),
-	//})
-
-	//=============
-	//DB.Where("code_num = ?", "333333555555").Delete(&Code{}) // Помечено как удаленное с возможностью восстановления
 }
 
 // БЛОК ОПИСАНИЯ ТАБЛИЦ ///////////////////////////////////////////////////////////////////////////
 // Имена таблиц и колонок в реальности создаются в нижнем регистре ================================
-type Users struct { // Таблица users
+
+// Users Таблица users
+type Users struct {
 	gorm.Model
 	Name     string
 	TgID     string
@@ -69,26 +35,30 @@ type Users struct { // Таблица users
 	Discount int
 }
 
-type Ofd struct { // Таблица ofds
+// Ofd Таблица ofds
+type Ofd struct {
 	gorm.Model
 	OfdName string
 	OfdLink string
 	Code    Code
 }
 
-type Period struct { // Таблица periods
+// Period Таблица periods
+type Period struct {
 	gorm.Model
 	PeriodName string
 	Code       Code
 }
 
-type Price struct { // Таблица prices
+// Price Таблица prices
+type Price struct {
 	gorm.Model
 	Price string
 	Code  Code
 }
 
-type Buy struct { // Таблица buys
+// Buy Таблица buys
+type Buy struct {
 	gorm.Model
 	TgId       string
 	Email      string
@@ -98,7 +68,8 @@ type Buy struct { // Таблица buys
 	Price      uint64
 }
 
-type Code struct { // Таблица codes
+// Code Таблица codes
+type Code struct {
 	gorm.Model
 	CodeNum  string
 	OfdID    uint
