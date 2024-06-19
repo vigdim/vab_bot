@@ -68,15 +68,6 @@ func Init() {
 	bh.Handle(main_handlers.Start, th.CommandEqual("start"))    //Вывод приветствия
 	bh.Handle(main_handlers.SendMyData, th.TextEqual("telega")) //Вывод данных пользователя
 
-	// TODO: Clean code
-	//http.HandleFunc("/", sayhello)       // Устанавливаем роутер
-	//err = http.ListenAndServe(":8080", nil) // устанавливаем порт веб-сервера
-	//if err != nil {
-	//	log.Fatal("ListenAndServe: ", err)
-	//}
-	//http.HandleFunc("/", sayhello)
-	//go http.ListenAndServe(":80", nil)
-
 	// Start handling updates
 	bh.Start()
 }
