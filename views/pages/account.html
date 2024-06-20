@@ -29,15 +29,17 @@
                     <p><strong><em>Имя</em></strong><em> и </em><strong><em>телефон</em></strong><em>&nbsp;могут потребоваться для обратной связи.</em><br><strong><em>Email</em></strong><em> необходим для получения чеков покупки.</em></p>
                 </div>
                 <form>
-                    <div class="mb-3"><label class="form-label" for="name"><strong>Имя</strong></label><input class="form-control item" type="text" id="name"></div>
-                    <div class="mb-3"><label class="form-label" for="password"><strong>Телефон</strong></label><input class="form-control item" type="password" id="password"></div>
-                    <div class="mb-3"><label class="form-label" for="email"><strong>Email</strong></label><input class="form-control item" type="email" id="email"></div><button class="btn btn-primary" type="submit">Сохранить</button>
+                    <div class="mb-3"><label class="form-label" for="name"><strong>Имя</strong></label><input class="form-control item" type="text" id="name" maxlength="100"></div>
+                    <div class="mb-3"><label class="form-label" for="phone"><strong>Телефон</strong></label><input class="form-control item" type="text" id="phone" placeholder="+7 (___) ___-____"></div>
+                    <div class="mb-3"><label class="form-label" for="email"><strong>Email</strong></label><input class="form-control item" type="email" id="email" maxlength="100"></div><button class="btn btn-primary" type="submit">Сохранить</button>
                 </form>
             </div>
         </section>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="/assets/js/script.min.js?h=4e4c11c0af46a2ec09a8fd9a87a4c097"></script>
 </body>
 
 </html>

@@ -17,31 +17,25 @@ func Hello(ctx *fasthttp.RequestCtx) {
 
 func Account(ctx *fasthttp.RequestCtx) {
 	ctx.SendFile("views/pages/account.html")
+
+	//_ = ctx.Response.SendFile("views/pages/account.html")
+	//UserName := ctx.UserValue("UserName")
+}
+
+func Assets(ctx *fasthttp.RequestCtx) {
+	ctx.SendFile("views/pages/assets/js/script.min.js")
 }
 
 func Init() {
 	r := router.New()
+	//r.ServeFiles("/assets/{filepath:*}", "views/pages/assets/{filepath:*}")
 	r.GET("/", Index)
 	r.GET("/hello/{name}", Hello)
 	r.GET("/account", Account)
+
+	r.GET("/assets/{filepath:*}", Assets)
 
 	// ngrok http --domain=workable-grouse-clean.ngrok-free.app 80
 	// https://workable-grouse-clean.ngrok-free.app/
 	log.Fatal(fasthttp.ListenAndServe(":80", r.Handler))
 }
-
-//func sayhello(w http.ResponseWriter, r *http.Request) {
-//	fmt.Fprintf(w, "Привет!")
-//}
-
-//func NewRouter() http.Handler {
-//	router := chi.NewRouter()
-//	r.Get("/{name}", HelloName)
-//
-//	// Настройка раздачи статических файлов
-//	staticPath, _ := filepath.Abs("views/pages/")
-//	fs := http.FileServer(http.Dir(staticPath))
-//	router.Handle("/*", fs)
-//
-//	return r
-//}
