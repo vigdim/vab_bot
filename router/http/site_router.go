@@ -16,14 +16,14 @@ func Hello(ctx *fasthttp.RequestCtx) {
 }
 
 func GetAccount(ctx *fasthttp.RequestCtx) {
-	//fasthttp.
+	ctx.SendFile("views/pages/index.html")
 }
 
 func Init() {
 	r := router.New()
 	r.GET("/", Index)
 	r.GET("/hello/{name}", Hello)
-	r.GET("/getaccount", GetAccount)
+	r.GET("/getaccaunt", GetAccount)
 
 	// ngrok http --domain=workable-grouse-clean.ngrok-free.app 80
 	// https://workable-grouse-clean.ngrok-free.app/

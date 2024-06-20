@@ -1,6 +1,9 @@
 package utils
 
 const (
+	// DOMAIN Домен для бота ==================================================
+	DOMAIN = "https://workable-grouse-clean.ngrok-free.app"
+	// ========================================================================
 	WelcomeUserMessage  string = "<b>Здравствуйте, %s!\nДобро пожаловать в сервис ККТ от компании ВАБ!</b>"
 	WelcomeAdminMessage string = "<b>Здравствуйте, %s!\nЗайдете под админом или пользователем?</b>"
 	AboutCompany        string = "<b>© О компании</b>\n\n" +

@@ -51,7 +51,7 @@ func AccountMess(bot *telego.Bot, update telego.Update) {
 		"<b>Меню 👤 Аккаунт</b>").WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
 	inlineKeyboard := tu.InlineKeyboard(
 		tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton("Внести свои данные").WithWebApp(tu.WebAppInfo("https://workable-grouse-clean.ngrok-free.app/")),
+			tu.InlineKeyboardButton("Внести свои данные").WithWebApp(tu.WebAppInfo(utils.DOMAIN + "/getaccaunt")),
 		),
 	)
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
