@@ -34,6 +34,7 @@ type Users struct {
 	TgID     string
 	Role     string
 	Email    string
+	Phone    string
 	Discount int
 }
 

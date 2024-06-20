@@ -15,15 +15,15 @@ func Hello(ctx *fasthttp.RequestCtx) {
 	fmt.Fprintf(ctx, "Hello, %s!\n", ctx.UserValue("name"))
 }
 
-func GetAccount(ctx *fasthttp.RequestCtx) {
-	ctx.SendFile("views/pages/index.html")
+func Account(ctx *fasthttp.RequestCtx) {
+	ctx.SendFile("views/pages/account.html")
 }
 
 func Init() {
 	r := router.New()
 	r.GET("/", Index)
 	r.GET("/hello/{name}", Hello)
-	r.GET("/getaccaunt", GetAccount)
+	r.GET("/account", Account)
 
 	// ngrok http --domain=workable-grouse-clean.ngrok-free.app 80
 	// https://workable-grouse-clean.ngrok-free.app/
