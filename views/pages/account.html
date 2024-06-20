@@ -3,11 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Account</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-<script>
+    <script type="application/javascript">
         const WebApp = window.Telegram.WebApp;
         WebApp.expand(); //расширяем на все окно
         WebApp.MainButton.text = "ЗАКРЫТЬ";
@@ -17,6 +17,28 @@
          WebApp.close();
         });
 
+        $(document).on('click', '#bn_save', function (event) {
+            event.stopPropagation();
+
+            $form = event.target.parent();
+            $name = $form.find('#name');
+            $phone = $form.find('#phone');
+            $email = $form.find('#email');
+            //let us_id = params.get("us_id");
+    
+            let formData = new FormData();
+            formData.append("us_id", "---------------");
+            formData.append("name", $name.value());
+            formData.append("phone", $phone.value());
+            formData.append("email", $email.value());
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://workable-grouse-clean.ngrok-free.app/account_post");
+            xhr.send(formData);
+    
+            WebApp.close();
+
+            // WebApp.showAlert('Объявление добавлено в закладки.\nИщи закладки в меню 👤Кабинет.\'');
+        });
     </script>
 </head>
 
@@ -31,7 +53,7 @@
                 <form>
                     <div class="mb-3"><label class="form-label" for="name"><strong>Имя</strong></label><input class="form-control item" type="text" id="name" maxlength="100"></div>
                     <div class="mb-3"><label class="form-label" for="phone"><strong>Телефон</strong></label><input class="form-control item" type="text" id="phone" placeholder="+7 (___) ___-____"></div>
-                    <div class="mb-3"><label class="form-label" for="email"><strong>Email</strong></label><input class="form-control item" type="email" id="email" maxlength="100"></div><button class="btn btn-primary" type="submit">Сохранить</button>
+                    <div class="mb-3"><label class="form-label" for="email"><strong>Email</strong></label><input class="form-control item" type="email" id="email" maxlength="100"></div><button id="bn_save" class="btn btn-primary" type="submit">Сохранить</button>
                 </form>
             </div>
         </section>
