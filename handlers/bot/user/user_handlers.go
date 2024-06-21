@@ -52,7 +52,7 @@ func AccountMess(bot *telego.Bot, update telego.Update) {
 	strUserId := strconv.Itoa(int(update.Message.Chat.ID))
 	inlineKeyboard := tu.InlineKeyboard(
 		tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton("Внести свои данные").WithWebApp(tu.WebAppInfo(utils.DOMAIN + "/account?UserId=" + strUserId)),
+			tu.InlineKeyboardButton("Внести свои данные").WithWebApp(tu.WebAppInfo(utils.DOMAIN + "/account?us_id=" + strUserId)),
 		),
 	)
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
