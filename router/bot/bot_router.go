@@ -58,9 +58,9 @@ func Init() {
 
 	// user handlers CallbackQuery =======================================================
 	// cback_ОФД
-	bh.HandleCallbackQuery(user_handlers.GetOneOfdCb, th.AnyCallbackQueryWithMessage(), th.CallbackDataPrefix("cb_OFD_"))
+	bh.HandleCallbackQuery(user_handlers.GetOneOfdCb /*th.AnyCallbackQueryWithMessage(),*/, th.CallbackDataPrefix("cb_OFD_"))
 	// cback Консультация
-	bh.HandleCallbackQuery(user_handlers.ConsultationCb, th.AnyCallbackQueryWithMessage(), th.CallbackDataPrefix("cb_cons_"))
+	bh.HandleCallbackQuery(user_handlers.ConsultationCb /*th.AnyCallbackQueryWithMessage(),*/, th.CallbackDataPrefix("cb_cons_"))
 
 	// admin handlers message ==============================================================
 	// Переход в меню Каталог

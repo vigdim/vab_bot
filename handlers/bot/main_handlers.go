@@ -1,4 +1,4 @@
-package bot
+package main_handlers
 
 import (
 	"fmt"
@@ -12,7 +12,6 @@ import (
 
 // Start Register new handler with match on command `/start`
 func Start(bot *telego.Bot, update telego.Update) {
-
 	var CurrentUser, UserYesNo = methods.GetUser(update.Message.From.ID)
 	if UserYesNo && CurrentUser[0].Role == "admin" {
 		file := utils.MustOpen("files/admin.jpg")
@@ -29,7 +28,7 @@ func Start(bot *telego.Bot, update telego.Update) {
 	}
 }
 
-// SendMyData Вывод данных пользователя по запросу
+// SendMyData Вывод данных пользователя по запросу. Слово: telega
 func SendMyData(bot *telego.Bot, update telego.Update) {
 	var (
 		tgId         = update.Message.From.ID

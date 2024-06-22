@@ -13,8 +13,8 @@ func AddUser(TgId string, Email string, Name string, Phone string, Discount int,
 		user = models.Users{TgID: TgId, Email: Email, Name: Name, Phone: Phone, Discount: Discount, Role: Role}
 		result = models.DB.Create(&user)
 	} else { // Иначе обновляем данные
-		//user = models.Users{TgID: TgId, Email: Email, Name: Name, Phone: Phone, Discount: Discount, Role: Role}
-		result = models.DB.Model(&user).Updates(models.Users{TgID: TgId, Email: Email, Name: Name, Phone: Phone, Discount: Discount, Role: Role})
+		// Изменения действуют только на ненулевые приходные переменные (пустые переменные не трогают имеющиеся записи в строке!
+		result = models.DB.Model(&user).Updates(models.Users{TgID: TgId, Email: Email, Name: Name, Phone: Phone, Discount: Discount})
 	}
 	return result.Error
 }
