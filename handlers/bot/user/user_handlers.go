@@ -41,7 +41,7 @@ func MainMenuMess(bot *telego.Bot, update telego.Update) {
 func CabinetMess(bot *telego.Bot, update telego.Update) {
 	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-		"<b>Меню 👤 Кабинет</b>").WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
+		"<b>Меню 🔐 Кабинет</b>").WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
 }
 
 // AccountMess Меню - Аккаунт
@@ -50,16 +50,24 @@ func AccountMess(bot *telego.Bot, update telego.Update) {
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
 		"<b>Меню 👤 Аккаунт</b>").WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
 	strUserId := strconv.Itoa(int(update.Message.Chat.ID))
-	//var CurrentUser, _ = methods.GetUser(update.Message.Chat.ID)
-	//CurrentUserName := CurrentUser[0].Name
+	CurrentUser, UserYesNo := methods.GetUser(update.Message.Chat.ID)
+	// Если пользователя не существует в базе
+	if UserYesNo == false {
+		err := methods.AddUser(strUserId, "", "", "", 0, "user")
+		if err != nil {
+			return
+		}
+		CurrentUser, UserYesNo = methods.GetUser(update.Message.Chat.ID)
+	}
 
 	inlineKeyboard := tu.InlineKeyboard(
 		tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton("Внести свои данные").WithWebApp(tu.WebAppInfo(utils.DOMAIN + "/account?us_id=" + strUserId /* &name="CurrentUserName */)),
+			tu.InlineKeyboardButton("📰 Внести свои данные").WithWebApp(tu.WebAppInfo(utils.DOMAIN + "/account?us_id=" +
+				strUserId + "&name=" + CurrentUser[0].Name + "&email=" + CurrentUser[0].Email + "&phone=" + CurrentUser[0].Phone)),
 		),
 	)
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
-		"<b>Данные для удобства</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+		"<b>Внесите свои данные для получения чеков покупки на почту и для возможной обратной связи:</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 }
 
 // ListOfd - Меню покупки ОФД
@@ -78,7 +86,6 @@ func ListOfd(bot *telego.Bot, update telego.Update) {
 	}
 
 	inlineKeyboard := tu.InlineKeyboardGrid(grid)
-
 	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
 		"<b>Выберите оператора ОФД:</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 }
@@ -106,8 +113,6 @@ func GetOneOfdCb(bot *telego.Bot, query telego.CallbackQuery) {
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
 			"Код активации "+ofd_name+" ОФД\n<b>Срок: "+PeriodName[0].PeriodName+"</b>"+
 				"\n<b>Цена: "+Price[0].Price+" рублей</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
-
-		//_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID), PeriodName[0].PeriodName))
 	}
 }
 

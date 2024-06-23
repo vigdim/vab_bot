@@ -22,6 +22,9 @@
 
         let params = (new URL(document.location)).searchParams;
         let us_id = params.get("us_id");
+        let us_name = params.get("name");
+        let us_email = params.get("email");
+        let us_phone = params.get("phone");
 
         $(document).on('click', '#bn_save', function () {
             document.getElementById("us_id").value = us_id;
@@ -50,13 +53,19 @@
                 </div>
                 <form>
                     <div class="mb-3"><label class="form-label" for="name"><strong>Имя</strong></label><input class="form-control item" type="text" id="name" name="name" maxlength="100"></div>
-                    <div class="mb-3"><label class="form-label" for="phone"><strong>Телефон</strong></label><input class="form-control item" type="text" id="phone" name="phone" placeholder="+7 (___) ___-____"></div>
+                    <div class="mb-3"><label class="form-label" for="phone"><strong>Телефон</strong></label><input class="form-control item" type="text" id="phone" name="phone" placeholder="+___________"></div>
                     <div class="mb-3"><label class="form-label" for="email"><strong>Email</strong></label><input class="form-control item" type="email" id="email" name="email" maxlength="100"></div>
                     <input id="us_id" class="form-control d-none" type="text" name="us_id" />
-                    <button onclick="Telegram.WebApp.showAlert('Информация обновлена!'); Telegram.WebApp.close();" id="bn_save" class="btn btn-primary" type="submit">Сохранить</button>
+                    <button id="bn_save" class="btn btn-primary" type="submit">Сохранить</button>
                 </form>
             </div>
         </section>
     </main>
+<script>
+    $("#bn_save").click(function(){Telegram.WebApp.showAlert('Информация обновлена!'); Telegram.WebApp.close();})
+    document.getElementById("name").value = us_name.replaceAll('%20', ' ');
+    document.getElementById("email").value = us_email;
+    document.getElementById("phone").value = us_phone;
+</script>
 </body>
 </html>

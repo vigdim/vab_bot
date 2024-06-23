@@ -8,7 +8,7 @@ import (
 var Kb_main = tu.Keyboard(
 	tu.KeyboardRow(
 		tu.KeyboardButton("📁 Каталог"),
-		tu.KeyboardButton("👤 Кабинет"),
+		tu.KeyboardButton("🔐 Кабинет"),
 	),
 ).WithResizeKeyboard().WithInputFieldPlaceholder("Нажмите на кнопку")
 
