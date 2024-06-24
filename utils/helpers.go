@@ -34,12 +34,6 @@ func DelMessage(bot *telego.Bot, update telego.Update) {
 	_ = bot.DeleteMessage(&DelMessParams)
 }
 
-func DelMessagesByName(mess string, bot *telego.Bot, update ...telego.Update) string {
-	//DelMessage()
-
-	return "777777777777777"
-}
-
 func InlineKeyboardButtonSend(nameButton string, nameCallback string) *telego.InlineKeyboardMarkup {
 	inlineKeyboard := tu.InlineKeyboard(
 		tu.InlineKeyboardRow(

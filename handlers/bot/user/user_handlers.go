@@ -98,8 +98,16 @@ func GetOneOfdCb(bot *telego.Bot, query telego.CallbackQuery) {
 	var (
 		PeriodName     []models.Period
 		Price          []models.Price
-		inlineKeyboard = utils.InlineKeyboardButtonSend(
-			"💵 Оплатить код активации 💵", "callback_payofd")
+		inlineKeyboard = tu.InlineKeyboard(
+			tu.InlineKeyboardRow(
+				tu.InlineKeyboardButton("💵 Оплатить код активации 💵").
+					WithCallbackData("callback_payofd"),
+			),
+			tu.InlineKeyboardRow(
+				tu.InlineKeyboardButton("🧾 Получить счёт на оплату 🧾").
+					WithCallbackData("callback_orderofd"),
+			),
+		)
 	)
 
 	var Code, ofd_name = methods.GetDbOneOfd(query.Data)
