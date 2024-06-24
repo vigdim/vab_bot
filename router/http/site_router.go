@@ -3,9 +3,15 @@ package site_router
 import (
 	"fmt"
 	"github.com/fasthttp/router"
+	"github.com/mymmrac/telego"
+	tu "github.com/mymmrac/telego/telegoutil"
 	"github.com/valyala/fasthttp"
 	"github.com/vigdim/vab_bot/database/methods"
+	"github.com/vigdim/vab_bot/keyboards"
+	bot_router "github.com/vigdim/vab_bot/router/bot"
+	"github.com/vigdim/vab_bot/utils"
 	"log"
+	"strconv"
 )
 
 func Index(ctx *fasthttp.RequestCtx) {
@@ -31,8 +37,17 @@ func AccountPost(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.Error(err.Error(), 0)
 	}
+	us_id_i64, _ := strconv.ParseInt(sUserId, 10, 64)
+	var bot = bot_router.Bot
 
-	//main_handlers.SendAnyMessage(_, _, "0000")
+	_, _ = bot.SendMessage(tu.Message(tu.ID(us_id_i64),
+		fmt.Sprintf("<b>Сохранённые данные:</b>\nИмя: <b>%s</b>\nEmail: <b>%s</b>\nТелефон: <b>%s</b>",
+			sName, sEmail, sPhone)).WithReplyMarkup(keyboards.Kb_сabinet).WithParseMode(telego.ModeHTML))
+
+	// MessFlagForDel - подтверждаем флагом удаление предыдущего сообщения и удаляем его
+	// По сути удаляется сообщение с кнопкой 📰 Внести свои данные, так как данные внутри неё остались старые
+	utils.MessFlagForDel = true
+	utils.DelMessage(bot, utils.CurUpdate)
 }
 
 func Assets(ctx *fasthttp.RequestCtx) {

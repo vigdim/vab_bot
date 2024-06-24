@@ -10,6 +10,9 @@ import (
 	"os"
 )
 
+// Bot - Глобальная переменная бота для использования в site_router
+var Bot = &telego.Bot{}
+
 func Init() {
 	botToken := os.Getenv("TOKEN")
 
@@ -24,7 +27,7 @@ func Init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
+	Bot = bot // Присваиваем глобальной переменной бота
 	// Get updates channel
 	updates, _ := bot.UpdatesViaLongPolling(nil)
 

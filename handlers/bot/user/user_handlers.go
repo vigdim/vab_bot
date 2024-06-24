@@ -59,15 +59,18 @@ func AccountMess(bot *telego.Bot, update telego.Update) {
 		}
 		CurrentUser, UserYesNo = methods.GetUser(update.Message.Chat.ID)
 	}
-
 	inlineKeyboard := tu.InlineKeyboard(
 		tu.InlineKeyboardRow(
 			tu.InlineKeyboardButton("📰 Внести свои данные").WithWebApp(tu.WebAppInfo(utils.DOMAIN + "/account?us_id=" +
 				strUserId + "&name=" + CurrentUser[0].Name + "&email=" + CurrentUser[0].Email + "&phone=" + CurrentUser[0].Phone)),
 		),
 	)
-	_, _ = bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
+	mess, _ := bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
 		"<b>Внесите свои данные для получения чеков покупки на почту и для возможной обратной связи:</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
+	// Помещаем сообщение на удаление с чата (нужно удалять так как кнопка будет содержать устаревшие данные
+	utils.MessIdForDel = mess.MessageID
+	utils.CurUpdate = update      // Инициализируем для вызова из функции сайта site_router->AccountPost
+	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
 }
 
 // ListOfd - Меню покупки ОФД

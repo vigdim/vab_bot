@@ -40,6 +40,7 @@
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "/account_post");
             xhr.send(formData);
+            sleepFor(1000); // Пауза после отправки для ожидания реакции обновления (update) бота
         });
     </script>
 </head>
@@ -62,10 +63,17 @@
         </section>
     </main>
 <script>
-    $("#bn_save").click(function(){Telegram.WebApp.showAlert('Информация обновлена!'); Telegram.WebApp.close();})
+    function sleepFor(sleepDuration){
+        let now = new Date().getTime();
+        while(new Date().getTime() < now + sleepDuration){
+            /* Do nothing */
+        }
+    }
     document.getElementById("name").value = us_name.replaceAll('%20', ' ');
     document.getElementById("email").value = us_email;
     document.getElementById("phone").value = us_phone;
+    $("#bn_save").click(function(){Telegram.WebApp.close();})
+    //$("#bn_save").click(function(){Telegram.WebApp.showAlert('Информация обновлена!'); Telegram.WebApp.close();})
 </script>
 </body>
 </html>
