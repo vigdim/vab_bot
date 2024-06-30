@@ -18,7 +18,7 @@ func Init() {
 	SQLCON := os.Getenv("MYSQLCON")
 
 	DB, err = gorm.Open(mysql.Open(SQLCON), &gorm.Config{})
-	//err = DB.AutoMigrate(&Ofd{}, &Period{}, &Price{}, &Buy{}, &Code{}, &Users{})
+	//err = DB.AutoMigrate(&Ofd{}, &Period{}, &Price{}, &Buy{}, &Code{}, &Users{}, &PayStatus{})
 	//if err != nil {
 	//	log.Fatalf("Ошибка AutoMigrate функции %s", err)
 	//}
@@ -79,6 +79,20 @@ type Code struct {
 	OfdID    uint
 	PeriodID uint
 	PriceID  uint
+}
+
+// PayStatus  Таблица pay_statuses
+type PayStatus struct {
+	gorm.Model
+	TgId       string
+	PayID      string
+	PayNotify  string
+	OfdID      string
+	OfdName    string
+	PeriodID   string
+	PeriodName string
+	PriceID    string
+	PriceName  string
 }
 
 // КОНЕЦ БЛОКА ОПИСАНИЯ ТАБЛИЦ ////////////////////////////////////////////////////////////////////

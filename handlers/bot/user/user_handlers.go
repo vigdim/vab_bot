@@ -55,9 +55,9 @@ func AccountMess(bot *telego.Bot, update telego.Update) {
 	if UserYesNo == false {
 		err := methods.AddUser(strUserId, "", "", "", 0, "user")
 		if err != nil {
-			return
+			CurrentUser, UserYesNo = methods.GetUser(update.Message.Chat.ID)
 		}
-		CurrentUser, UserYesNo = methods.GetUser(update.Message.Chat.ID)
+
 	}
 	inlineKeyboard := tu.InlineKeyboard(
 		tu.InlineKeyboardRow(
@@ -67,10 +67,10 @@ func AccountMess(bot *telego.Bot, update telego.Update) {
 	)
 	mess, _ := bot.SendMessage(tu.Message(tu.ID(update.Message.Chat.ID),
 		"<b>Внесите свои данные для получения чеков покупки на почту и для возможной обратной связи:</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
-	// Помещаем сообщение на удаление с чата (нужно удалять так как кнопка будет содержать устаревшие данные
+
 	utils.MessIdForDel = mess.MessageID
-	utils.CurUpdate = update      // Инициализируем для вызова из функции сайта site_router->AccountPost
-	utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
+	utils.CurUpdate = update // Инициализируем для вызова из функции сайта site_router->AccountPost
+	//utils.DelMessage(bot, update) // Удаляем предыдущее сообщение
 }
 
 // ListOfd - Меню покупки ОФД
@@ -96,21 +96,11 @@ func ListOfd(bot *telego.Bot, update telego.Update) {
 // GetOneOfdCb - щелчек по кнопке оператора ОФД
 func GetOneOfdCb(bot *telego.Bot, query telego.CallbackQuery) {
 	var (
-		PeriodName     []models.Period
-		Price          []models.Price
-		inlineKeyboard = tu.InlineKeyboard(
-			tu.InlineKeyboardRow(
-				tu.InlineKeyboardButton("💵 Оплатить код активации 💵").
-					WithCallbackData("callback_payofd"),
-			),
-			tu.InlineKeyboardRow(
-				tu.InlineKeyboardButton("🧾 Получить счёт на оплату 🧾").
-					WithCallbackData("callback_orderofd"),
-			),
-		)
+		PeriodName []models.Period
+		Price      []models.Price
 	)
 
-	var Code, ofd_name = methods.GetDbOneOfd(query.Data)
+	var Code, ofd_name, ofd_id = methods.GetDbOneOfd(query.Data)
 	if len(Code) == 0 {
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
 			"️❗️Коды активации для оператора "+strings.Split(query.Data, "_")[2]+
@@ -121,10 +111,31 @@ func GetOneOfdCb(bot *telego.Bot, query telego.CallbackQuery) {
 	for index := range Code {
 		models.DB.First(&PeriodName, Code[index].PeriodID)
 		models.DB.First(&Price, Code[index].PriceID)
+		inlineKeyboard := tu.InlineKeyboard(
+			tu.InlineKeyboardRow(
+				tu.InlineKeyboardButton("💵 Оплата онлайн").
+					WithCallbackData("callback_payofd_"+ofd_id+"_"+utils.UintToStr(PeriodName[0].ID)+"_"+utils.UintToStr(Price[0].ID)),
+				tu.InlineKeyboardButton("🧾 Оплата по счёту").
+					WithCallbackData("callback_orderofd"),
+			),
+		)
 		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID),
 			"Код активации "+ofd_name+" ОФД\n<b>Срок: "+PeriodName[0].PeriodName+"</b>"+
 				"\n<b>Цена: "+Price[0].Price+" рублей</b>").WithReplyMarkup(inlineKeyboard).WithParseMode(telego.ModeHTML))
 	}
+}
+
+func PayOfdCb(bot *telego.Bot, query telego.CallbackQuery) {
+	data := query.Data /* + "_" + utils.Int64ToStr(query.Message.GetChat().ID)*/
+	OfdId := strings.Split(data, "_")[2]
+	PeriodId := strings.Split(data, "_")[3]
+	PriceId := strings.Split(data, "_")[4]
+
+	nameOfd, namePeriod, namePrice := methods.GetValuesCodesToString(OfdId, PeriodId, PriceId)
+	_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID), nameOfd+namePeriod+namePrice))
+
+	utils.SendPayOfd(bot, query, nameOfd, OfdId, namePeriod, PeriodId, namePrice, PriceId)
+
 }
 
 // ConsultationMess - Меню Консультация
@@ -135,7 +146,7 @@ func ConsultationMess(bot *telego.Bot, update telego.Update) {
 			tu.InlineKeyboardButton("Приобретение ККТ").WithCallbackData("cb_cons_PayKKT"),
 		),
 		tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton("Приобретение ФН или ОФД").WithCallbackData("cb_cons_PayFnOfd"),
+			tu.InlineKeyboardButton("Приобретение ФН / ОФД").WithCallbackData("cb_cons_PayFnOfd"),
 		),
 		tu.InlineKeyboardRow(
 			tu.InlineKeyboardButton("Обслуживание ККТ").WithCallbackData("cb_cons_ServKKT"),
@@ -160,7 +171,7 @@ func ConsultationCb(bot *telego.Bot, query telego.CallbackQuery) {
 	VabTgId, _ := strconv.ParseInt(os.Getenv("VAB_TG_ID"), 10, 64)
 	inlineKeyboardPeriod := tu.InlineKeyboard(
 		tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton("🔂 Ответить в личку").WithURL("https://t.me/"+query.From.Username),
+			tu.InlineKeyboardButton("🔂 Ответить в личку").WithURL("tg://user?id="+strconv.Itoa(int(query.From.ID))),
 		),
 		tu.InlineKeyboardRow(
 			tu.InlineKeyboardButton("🕝 10 минут").

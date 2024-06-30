@@ -64,6 +64,8 @@ func Init() {
 	bh.HandleCallbackQuery(user_handlers.GetOneOfdCb /*th.AnyCallbackQueryWithMessage(),*/, th.CallbackDataPrefix("cb_OFD_"))
 	// cback Консультация
 	bh.HandleCallbackQuery(user_handlers.ConsultationCb /*th.AnyCallbackQueryWithMessage(),*/, th.CallbackDataPrefix("cb_cons_"))
+	// Оплпта ОФД
+	bh.HandleCallbackQuery(user_handlers.PayOfdCb, th.CallbackDataPrefix("callback_payofd_"))
 
 	// admin handlers message ==============================================================
 	// Переход в меню Каталог

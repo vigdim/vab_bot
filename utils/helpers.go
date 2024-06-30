@@ -4,6 +4,7 @@ import (
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
 	"os"
+	"strconv"
 )
 
 // MustOpen - Возвращает ссылку на открытый / созданный файл
@@ -46,4 +47,11 @@ func InlineKeyboardButtonSend(nameButton string, nameCallback string) *telego.In
 
 func ConfirmSend(nameCallback string) *telego.InlineKeyboardMarkup {
 	return InlineKeyboardButtonSend("✔️Подтвердить отправку", nameCallback)
+}
+
+func Int64ToStr(i int64) string {
+	return strconv.Itoa(int(i))
+}
+func UintToStr(i uint) string {
+	return strconv.Itoa(int(uint(i)))
 }

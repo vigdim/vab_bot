@@ -1,6 +1,8 @@
 package site_router
 
 import (
+	"crypto/md5"
+	"encoding/json"
 	"fmt"
 	"github.com/fasthttp/router"
 	"github.com/mymmrac/telego"
@@ -10,12 +12,14 @@ import (
 	"github.com/vigdim/vab_bot/keyboards"
 	bot_router "github.com/vigdim/vab_bot/router/bot"
 	"github.com/vigdim/vab_bot/utils"
+	"io"
 	"log"
 	"strconv"
 )
 
 func Index(ctx *fasthttp.RequestCtx) {
 	ctx.WriteString("Welcome!")
+	fmt.Println("Welcome!")
 }
 
 func Hello(ctx *fasthttp.RequestCtx) {
@@ -51,7 +55,33 @@ func AccountPost(ctx *fasthttp.RequestCtx) {
 }
 
 func Assets(ctx *fasthttp.RequestCtx) {
-	ctx.SendFile("views/pages/assets/js/script.min.js")
+	ctx.SendFile("views/pages/assets/js/inits.js")
+}
+
+func Pay(ctx *fasthttp.RequestCtx) {
+	payBody := ctx.PostBody()
+	fmt.Println(string(payBody)) // this is fine
+
+	payBodyData := utils.PayData{} // Структура патежа
+
+	err := json.Unmarshal(payBody, &payBodyData)
+	if err != nil {
+		return
+	}
+
+	fmt.Println(payBodyData.Object.ID)
+	fmt.Println(payBodyData.Event)
+	fmt.Println(payBodyData.Object.Status)
+	fmt.Println(payBodyData.Object.Amount.Value)
+	fmt.Println(payBodyData.Object.Amount.Currency)
+
+	payload1 := `{"app_id":"20503546","command":{"c_num":"1719407813348","goods":[{"sum":120,"name":"Ваш любимый товар 1","count":1,"price":120,"nds_value":20,"nds_not_apply":false,"item_type":1,"payment_mode":4}],"tag1055":1,"author":"Кассир","smsEmail54FZ":"example@client.ru","payed_cash":0,"payed_prepay":0,"payed_cashless":120,"payed_nextcredit":0,"payed_consideration":0},"nonce":"salt_1719407813348","type":"printCheck"}`
+	payload2 := "z2lzJz"
+	h := md5.New()
+	io.WriteString(h, payload1)
+	io.WriteString(h, payload2)
+	fmt.Printf("%x", h.Sum(nil))
+
 }
 
 func Init() {
@@ -61,7 +91,8 @@ func Init() {
 	r.GET("/hello/{name}", Hello)
 	r.GET("/account", AccountGet)
 	r.POST("/account_post", AccountPost)
-	r.GET("/assets/js/script.min.js", Assets)
+	r.GET("/assets/js/inits.js", Assets)
+	r.POST("/pay", Pay)
 
 	// ngrok http --domain=workable-grouse-clean.ngrok-free.app 80
 	// https://workable-grouse-clean.ngrok-free.app/
