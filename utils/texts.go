@@ -1,9 +1,9 @@
 package utils
 
-import "os"
-
 var (
-	DOMAIN = os.Getenv("DOMAIN_SERVER")
+	DOMAIN_SERVER    string
+	ACQUIRING_SERVER string
+	CHECK_SERVER     string
 )
 
 const (

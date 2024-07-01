@@ -59,9 +59,10 @@ func AccountMess(bot *telego.Bot, update telego.Update) {
 		}
 
 	}
+	//url_account := os.Getenv("DOMAIN_SERVER")
 	inlineKeyboard := tu.InlineKeyboard(
 		tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton("📰 Внести свои данные").WithWebApp(tu.WebAppInfo(utils.DOMAIN + "/account?us_id=" +
+			tu.InlineKeyboardButton("📰 Внести свои данные").WithWebApp(tu.WebAppInfo(utils.DOMAIN_SERVER + "/account?us_id=" +
 				strUserId + "&name=" + CurrentUser[0].Name + "&email=" + CurrentUser[0].Email + "&phone=" + CurrentUser[0].Phone)),
 		),
 	)

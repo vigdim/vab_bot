@@ -4,20 +4,22 @@ import (
 	"bytes"
 	"crypto/md5"
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"github.com/mymmrac/telego"
+	tu "github.com/mymmrac/telego/telegoutil"
+	"github.com/vigdim/vab_bot/database/methods"
 	"io/ioutil"
 	"math/big"
 	"net/http"
-	"os"
 	"strings"
 )
 
 func SendPayOfd(bot *telego.Bot, query telego.CallbackQuery, nameOfd string, OfdId string, namePeriod string,
 	PeriodId string, namePrice string, PriceId string) {
 
-	url := os.Getenv("ACQUIRING_SERVER")
-	returnUrl := os.Getenv("DOMAIN_SERVER") + "/account"
+	url := ACQUIRING_SERVER
+	returnUrl := DOMAIN_SERVER + "/account"
 	method := "POST"
 
 	payload := strings.NewReader(`{
@@ -62,12 +64,28 @@ func SendPayOfd(bot *telego.Bot, query telego.CallbackQuery, nameOfd string, Ofd
 	}
 	fmt.Println(string(body))
 
-	//TgID := Int64ToStr(query.Message.GetChat().ID)
-	//methods.GetSetPayStatus(TgID, )
+	payBodyData := PayData{} // Структура патежа
+	err = json.Unmarshal(body, &payBodyData)
+	if err != nil {
+		return
+	}
+	fmt.Println(payBodyData.Id)
+	fmt.Println(payBodyData.Status)
+	fmt.Println(payBodyData.Description)
+	fmt.Println(payBodyData.Confirmation.ConfirmationUrl)
+	fmt.Println(payBodyData.CreatedAt)
+
+	TgID := Int64ToStr(query.Message.GetChat().ID)
+	err = methods.GetSetPayStatus(TgID, payBodyData.Id, payBodyData.Status, nameOfd, OfdId, namePeriod, PeriodId, namePrice, PriceId)
+	if err != nil {
+		_, _ = bot.SendMessage(tu.Message(tu.ID(query.Message.GetChat().ID), "Ошибка при обращении к базе данных! Повторите позже!"))
+		return
+	}
+	//exec.Command("open", payBodyData.Confirmation.ConfirmationUrl).Run()
 }
 
 func SendCheckOfd(nameOfd string, namePeriod string, namePrice string) {
-	url := os.Getenv("CHECK_SERVER")
+	url := CHECK_SERVER
 	method := "POST"
 
 	payload1 := strings.NewReader(`{
@@ -97,7 +115,7 @@ func SendCheckOfd(nameOfd string, namePeriod string, namePrice string) {
     },
     "nonce": "salt_17333487",
     "type": "printCheck"
-}z2lzJz`)
+	}z2lzJz`)
 	var b bytes.Buffer
 	b.ReadFrom(payload1)
 	data := []byte(b.String())
